@@ -76,5 +76,5 @@ jobs:
           copy_stack_file: true
           pull_images_first: true
           deploy_path: /home/worker/levell/crowdmanager
-          stack_file_name: ./CrowdManager/docker-compose.prod.yml
+          stack_file_name: docker-compose.prod.yml
           args: --with-registry-auth --prune crowdmanager

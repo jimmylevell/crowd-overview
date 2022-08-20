@@ -1,4 +1,5 @@
 # Master Thesis
+[![Publish docker images](https://github.com/jimmylevell/crowd-overview/actions/workflows/action.yml/badge.svg)](https://github.com/jimmylevell/crowd-overview/actions/workflows/action.yml)
 Crowd Flow Monitoring – Visualizing crowd movements using information captured on checkpoints.
 
 ## Environment
