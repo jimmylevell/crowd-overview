@@ -21,21 +21,21 @@ By using the Visual Studio Code Extension for [Azure](https://marketplace.visual
 ## Components
 This mono repository contains the following four important components. Each component has an individual readme explaining further details of the component.
 
-### Crowd Manager Web Interface
+### Crowd Manager Web Interface - [Repo](https://github.com/jimmylevell/crowd-overview/tree/master/CrowdManager)
 Purpose: main web interface for the management of the checkpoints and for visualization of the crowd movements. The backend is also the entry point for the checkpoints to upload their measurements.
 
 Technology used: NextJS, React, BootStrap
 
-### Object Counter - Computer Model
+### Object Counter - Computer Model - [Repo](https://github.com/jimmylevell/crowd-overview/tree/master/ObjectCounter)
 Purpose: computer model which is used within the smart checkpoints. The model can detect and track objects within a web cam feed. The model can differ between 80 different classes of objects and can furthermore estimate the direction of the objects. Based on these various information the corresponding checkpoint can count individual classes of objects and report their direction of movement.
 
 Technology: OpenCV, Python, Yolov4
 
-### Measurement Aggregator - Azure Function
+### Crowd Aggregator - Azure Function - [Repo](https://github.com/jimmylevell/crowd-overview/tree/master/CrowdAggregator)
 Purpose: aggregates the individual measurements to to get a more general and coarse impression of the movement of the crowd. These aggregated information are displayed within the web site.
 
 Technology: JavaScript, Azure Function
-### Simulator
+### Simulator - [Repo]()
 Purpose: virtual environment to test the application setup.
 
 Technology: Unity

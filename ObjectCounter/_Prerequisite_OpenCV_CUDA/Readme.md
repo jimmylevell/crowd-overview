@@ -3,6 +3,8 @@ The neural network is performing badly when executed on only on a CPU.
 To improve the performance, a GPU is required. OpenCV supports CUDA and OpenCV but one is required to manually compile it.
 During this process the CUDA setting must be enabled in the OpenCV configuration file, allowing the creation of a CUDA-enabled OpenCV library.
 
+Files can be downloaded [here](https://1drv.ms/u/s!AkVVh8y1e1vuqc14hHj5UIIxbiEx_g?e=AfCOgG)
+
 ## How it works
 1) Download and install python
 2) Download and install Visual Studio 2019 Community Edition. During the setup of Visual Studio enable the feature "Destkop development with C++".
