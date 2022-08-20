@@ -1,0 +1,8 @@
+name: opencv-tracking-v1
+
+dependencies:
+  - python==3.8
+  - pip
+  - pip:
+    - opencv-contrib-python==3.4.11.45
+    - ipykernel

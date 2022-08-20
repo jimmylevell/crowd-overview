@@ -1,0 +1,97 @@
+version: '3.8'
+services:
+  crowdmanager-backend:
+    image: ghcr.io/jimmylevell/crowdmanager/crowdmanager_backend:latest
+    networks:
+      - traefik-public
+      - crowdmanager
+    environment:
+      NODE_ENV: production
+      MONGO_DB_STRING: /run/secrets/MONGO_DB_STRING
+      DEEPL_API_KEY: /run/secrets/DEEPL_API_KEY
+      AZURE_TENANT_ID: /run/secrets/AZURE_TENANT_ID
+      AZURE_CLIENT_ID: /run/secrets/AZURE_CLIENT_ID
+    secrets:
+      - MONGO_DB_STRING
+      - DEEPL_API_KEY
+      - AZURE_TENANT_ID
+      - AZURE_CLIENT_ID
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      labels:
+        - traefik.enable=true # enable traefik
+        - traefik.docker.network=traefik-public # put it in the same network as traefik
+        - traefik.constraint-label=traefik-public # assign the same label as traefik so it can be discovered
+        - traefik.http.routers.crowdmanagerbackend.rule=Host(`api.crowdmanager.app.levell.ch`) # listen to port 80 for request to APP_DOMAIN (use together with the line below)
+        - traefik.http.routers.crowdmanagerbackend.entrypoints=http
+        - traefik.http.routers.crowdmanagerbackend.middlewares=https-redirect
+        - traefik.http.middlewares.crowdmanagerbackend.redirectscheme.scheme=https # redirect traffic to https
+        - traefik.http.middlewares.crowdmanagerbackend.redirectscheme.permanent=true # redirect traffic to https
+        - traefik.http.routers.crowdmanagerbackend-secured.rule=Host(`api.crowdmanager.app.levell.ch`) # listen to port 443 for request to APP_DOMAIN (use together with the line below)
+        - traefik.http.routers.crowdmanagerbackend-secured.entrypoints=https
+        - traefik.http.routers.crowdmanagerbackend-secured.tls.certresolver=le # use the Let's Encrypt certificate we set up earlier
+        - traefik.http.services.crowdmanagerbackend-secured.loadbalancer.server.port=3000 # ask Traefik to search for port of the service container
+
+        # redundancy required configuration - allowing load balancer to handle multiple replicas
+        - traefik.http.services.crowdmanagerbackend-secured.loadbalancer.sticky=true
+        - traefik.http.services.crowdmanagerbackend-secured.loadbalancer.sticky.cookie.name=StickyCookie
+        - traefik.http.services.crowdmanagerbackend-secured.loadbalancer.sticky.cookie.secure=true
+
+  crowdmanager-frontend:
+    image: ghcr.io/jimmylevell/crowdmanager/crowdmanager_frontend:latest
+    networks:
+      - traefik-public
+    environment:
+      REACT_APP_BACKEND_URL: https://api.crowdmanager.app.levell.ch
+      NODE_ENV: production
+      REACT_APP_AZURE_CLIENT_ID: DOCKER-SECRET->AZURE_CLIENT_ID
+      REACT_APP_AZURE_ID: DOCKER-SECRET->AZURE_TENANT_ID
+    secrets:
+      - AZURE_TENANT_ID
+      - AZURE_CLIENT_ID
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      labels:
+      - traefik.enable=true # enable traefik
+      - traefik.docker.network=traefik-public # put it in the same network as traefik
+      - traefik.constraint-label=traefik-public # assign the same label as traefik so it can be discovered
+      - traefik.http.routers.crowdmanagerfrontend.rule=Host(`crowdmanager.app.levell.ch`) # listen to port 80 for request to APP_DOMAIN (use together with the line below)
+      - traefik.http.routers.crowdmanagerfrontend.entrypoints=http
+      - traefik.http.routers.crowdmanagerfrontend.middlewares=https-redirect
+      - traefik.http.middlewares.crowdmanagerfrontend.redirectscheme.scheme=https # redirect traffic to https
+      - traefik.http.middlewares.crowdmanagerfrontend.redirectscheme.permanent=true # redirect traffic to https
+      - traefik.http.routers.crowdmanagerfrontend-secured.rule=Host(`crowdmanager.app.levell.ch`) # listen to port 443 for request to APP_DOMAIN (use together with the line below)
+      - traefik.http.routers.crowdmanagerfrontend-secured.entrypoints=https
+      - traefik.http.routers.crowdmanagerfrontend-secured.tls.certresolver=le # use the Let's Encrypt certificate we set up earlier
+      - traefik.http.services.crowdmanagerfrontend-secured.loadbalancer.server.port=3100 # ask Traefik to search for port service container
+
+      # redundancy required configuration - allowing load balancer to handle multiple replicas
+      - traefik.http.services.crowdmanagerfrontend-secured.loadbalancer.sticky=true
+      - traefik.http.services.crowdmanagerfrontend-secured.loadbalancer.sticky.cookie.name=StickyCookie
+      - traefik.http.services.crowdmanagerfrontend-secured.loadbalancer.sticky.cookie.secure=true
+
+networks:
+  traefik-public:
+    external: true
+  crowdmanager:
+    external: true
+
+secrets:
+  MONGO_DB_STRING:
+    external: true
+  DEEPL_API_KEY:
+    external: true
+  AZURE_TENANT_ID:
+    external: true
+  AZURE_CLIENT_ID:
+    external: true
