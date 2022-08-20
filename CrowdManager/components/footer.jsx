@@ -1,7 +1,7 @@
 export default function Footer() {
-    return (
-        <footer>
-            Powered by{' Team Orca '}
-        </footer>
-    )
+  return (
+    <footer>
+      Powered by{' James Levell '}
+    </footer>
+  )
 }

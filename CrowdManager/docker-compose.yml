@@ -1,8 +1,8 @@
 version: '3.9'
 services:
-  smssender:
+  crowdmanager:
     build:
-      target: smssender-dev
+      target: crowdmanager-dev
       context: .
       dockerfile: Dockerfile
     user: "${UID:-0}:${GID:-0}"
@@ -22,7 +22,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: smssender
+      MONGO_INITDB_DATABASE: crowdmanager
     depends_on:
-      - smssender
+      - crowdmanager
 

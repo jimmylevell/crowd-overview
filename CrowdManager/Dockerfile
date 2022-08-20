@@ -1,7 +1,7 @@
 ###############################################################################################
 # Base
 ###############################################################################################
-FROM node:18 as smssender-base
+FROM node:18 as crowdmanager-base
 
 RUN mkdir -p /app
 WORKDIR /app
@@ -14,12 +14,14 @@ RUN apt-get install dos2unix -y
 ###############################################################################################
 # DEVELOPMENT
 ###############################################################################################
-FROM smssender-base as smssender-dev
+FROM crowdmanager-base as crowdmanager-dev
 
 RUN mkdir -p /docker
 COPY ./docker/entrypoint.sh /docker
+
 # required for commits within vscode
 RUN apt-get install git gnupg openssh-client -y
+
 RUN chmod +x /docker/entrypoint.sh
 RUN dos2unix /docker/entrypoint.sh
 
@@ -30,7 +32,7 @@ ENTRYPOINT [ "/docker/entrypoint.sh" ]
 ###############################################################################################
 # PRODUCTION
 ###############################################################################################
-FROM smssender-base as smssender-deploy
+FROM crowdmanager-base as crowdmanager-deploy
 
 # Install app dependencies
 COPY . .
