@@ -11,16 +11,16 @@ const CheckpointSchema = new Schema({
   timestamps: true
 })
 
-const Checkpoint = models.Checkpoint || model('Checkpoint', CheckpointSchema);
+const Checkpoint = new models.Checkpoint || model('Checkpoint', CheckpointSchema);
 
 export default Checkpoint;
 
-export async function createCheckpoint(checkpoint: Checkpoint) {
+export async function createCheckpoint(checkpoint: typeof Checkpoint) {
   await db;
   return Checkpoint.create(checkpoint);
 }
 
-export async function updateCheckpoint(checkpoint: Checkpoint) {
+export async function updateCheckpoint(checkpoint: typeof Checkpoint) {
   await db;
   return Checkpoint.updateOne({ _id: checkpoint._id }, checkpoint);
 }

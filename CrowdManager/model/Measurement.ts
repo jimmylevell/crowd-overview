@@ -3,16 +3,16 @@ import db from '../services/db';
 
 const MeasurementSchema = new Schema({
   _id: Types.ObjectId,
-  object_class: number,
+  object_class: Number,
   checkpoint_id: String,
-  direction: string,
+  direction: String,
   measured_at: Date,
 }, {
   collection: 'measurements',
   timestamps: true
 })
 
-const Measurement = models.Measurement || model('Measurement', MeasurementSchema);
+const Measurement = new models.Measurement || model('Measurement', MeasurementSchema);
 
 export default Measurement;
 

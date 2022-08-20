@@ -1,5 +1,5 @@
 import { unstable_getServerSession } from "next-auth/next"
-import { getCheckpoints, updateCheckpoint, createCheckpoint, deleteCheckpoint, Checkpoint } from "../../model/Checkpoint"
+import Checkpoint, { getCheckpoints, updateCheckpoint, createCheckpoint, deleteCheckpoint } from "../../model/Checkpoint"
 import logger from "../../services/logger"
 import { authOptions } from "./auth/[...nextauth]"
 
@@ -22,7 +22,7 @@ const handler = async (req, res) => {
       }
     }
 
-    const post = async(checkpoint: Checkpoint) => {
+    const post = async(checkpoint: typeof Checkpoint) => {
       if(req.body.checkpoint) {
         try {
           let checkpoint = await createCheckpoint(req.body.checkpoint)
@@ -36,7 +36,7 @@ const handler = async (req, res) => {
       }
     }
 
-    const put = async(checkpoint: Checkpoint) => {¨
+    const put = async(checkpoint: typeof Checkpoint) => {
       if(req.body.checkpoint) {
         try {
           let checkpoint = await updateCheckpoint(req.body.checkpoint)
@@ -50,7 +50,7 @@ const handler = async (req, res) => {
       }
     }
 
-    const deleteCheckpoint = async(checkpoint: Checkpoint) => {
+    const deleteCheckpoint = async(checkpoint: typeof Checkpoint) => {
       if(req.body.checkpoint) {
         try {
           let checkpoint = await deleteCheckpoint(req.body.checkpoint)
@@ -75,7 +75,7 @@ const handler = async (req, res) => {
           put(req.body.checkpoint)
           break
         case 'DELETE':
-          delete(req.body.checkpoint)
+          deleteCheckpoint(req.body.checkpoint)
         default:
           res.status(405).json({ response: 'error', message: 'Method not allowed' })
           break

@@ -43,7 +43,7 @@ export default function Graph(props) {
 
         const network = new Network(appRef.current, data, options)
         network.stabilize();
-    })
+    }, [props.data]);
 
     return (
         <div className={ classes.root } ref={ this.state.appRef } />
