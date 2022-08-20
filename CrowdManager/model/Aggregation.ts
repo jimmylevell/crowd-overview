@@ -13,6 +13,7 @@ const AggregationSchema = new Schema({
 	timestamps: true
 })
 
+// https://stackoverflow.com/questions/34482136/mongoose-the-typescript-way
 const Aggregation = new models.Aggregation || model('Aggregation', AggregationSchema);
 export default Aggregation;
 

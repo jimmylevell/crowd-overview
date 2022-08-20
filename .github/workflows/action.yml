@@ -62,7 +62,7 @@ jobs:
         with:
           push: true
           context: ./CrowdManager
-          target: smssender-deploy
+          target: crowdmanager-deploy
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       -
