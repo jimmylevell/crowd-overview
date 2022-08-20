@@ -52,6 +52,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           target: crowdmanager-deploy
+          context: ./CrowdManager
           load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -60,6 +61,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
+          context: ./CrowdManager
           target: smssender-deploy
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -74,5 +76,5 @@ jobs:
           copy_stack_file: true
           pull_images_first: true
           deploy_path: /home/worker/levell/crowdmanager
-          stack_file_name: docker-compose.prod.yml
+          stack_file_name: ./CrowdManager/docker-compose.prod.yml
           args: --with-registry-auth --prune crowdmanager
