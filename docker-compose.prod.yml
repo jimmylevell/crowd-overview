@@ -11,7 +11,7 @@ services:
       AZURE_AD_CLIENT_SECRET: /run/secrets/AZURE_AD_CLIENT_SECRET
       AZURE_AD_TENANT_ID: /run/secrets/AZURE_AD_TENANT_ID
       NEXT_PUBLIC: PUBLIC
-      NEXTAUTH_URL: crowdmanager.app.levell.ch
+      NEXTAUTH_URL: https://crowdmanager.app.levell.ch
       NEXTAUTH_SECRET: /run/secrets/NEXTAUTH_SECRET
     secrets:
       - MONGO_DB_STRING_CROWDMANAGER
@@ -20,7 +20,7 @@ services:
       - AZURE_AD_TENANT_ID
       - NEXTAUTH_SECRET
     deploy:
-      replicas: 3
+      replicas: 1
       update_config:
         parallelism: 1
         delay: 10s
