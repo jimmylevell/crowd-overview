@@ -1,8 +1,16 @@
 import cv2
 import numpy as np
+import os
+
+from detection import Detection
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 class ObjectDetection:
-    def __init__(self, weights_path="dnn_model/yolov4.weights", cfg_path="dnn_model/yolov4.cfg"):
+    def __init__(self, weights_path="dnn_model\yolov4.weights", cfg_path="dnn_model\yolov4.cfg"):
+        weights_path = os.path.join(BASE_DIR, weights_path)
+        cfg_path = os.path.join(BASE_DIR, cfg_path)
+
         print("Loading Object Detection")
         print("Running opencv dnn with YOLOv4")
         self.nmsThreshold = 0.4
@@ -23,7 +31,8 @@ class ObjectDetection:
 
         self.model.setInputParams(size=(self.image_size, self.image_size), scale=1/255)
 
-    def load_class_names(self, classes_path="dnn_model/classes.txt"):
+    def load_class_names(self, classes_path="dnn_model\classes.txt"):
+        classes_path = os.path.join(BASE_DIR, classes_path)
         with open(classes_path, "r") as file_object:
             for class_name in file_object.readlines():
                 class_name = class_name.strip()
@@ -33,5 +42,11 @@ class ObjectDetection:
         return self.classes
 
     def detect(self, frame):
-        return self.model.detect(frame, nmsThreshold=self.nmsThreshold, confThreshold=self.confThreshold)
+        (class_ids, scores, boxes) = self.model.detect(frame, nmsThreshold=self.nmsThreshold, confThreshold=self.confThreshold)
 
+        # create detection objects
+        detections = []
+        for class_id, score, box in zip(class_ids, scores, boxes):
+            detections.append(Detection(class_id, score, box))
+
+        return detections
