@@ -20,7 +20,7 @@ def download_weights_if_required():
 
     if not os.path.exists(path):
         import wget
-        wget.download(settings.weight_urls, out="path")
+        wget.download(settings.weight_urls, out=path)
 
 if __name__ == "__main__":
     main()
