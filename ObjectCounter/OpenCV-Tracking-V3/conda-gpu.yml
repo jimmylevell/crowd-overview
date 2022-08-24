@@ -6,3 +6,4 @@ dependencies:
   - pip:
     - ipykernel
     - wget
+    - opencv-contrib-python

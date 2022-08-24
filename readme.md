@@ -10,7 +10,7 @@ Using the following command the virtual environment can be created and activated
 
 ```
 %conda env create -f conda-gpu.yml
-%conda activate conda-gpu.yml
+%conda activate opencv-tracking-v{}
 ```
 
 ### NextJS
