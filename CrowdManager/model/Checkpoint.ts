@@ -1,15 +1,13 @@
-import { Schema, Types, model, models } from 'mongoose';
-import db from '../services/db';
+import mongoose, { Document, model, models, Model, Schema } from "mongoose"
+import db from '../utils/db';
 
-export interface ICheckpoint {
-  _id: String,
+export interface ICheckpoint extends Document {
   api_key: String,
   name: String,
   connected_checkpoints: [String]
 }
 
-const CheckpointSchema = new Schema({
-  _id: Types.ObjectId,
+const CheckpointSchema: Schema = new Schema({
   api_key: String,
   name: String,
   connected_checkpoints: [String],
@@ -18,17 +16,14 @@ const CheckpointSchema = new Schema({
   timestamps: true
 })
 
-const Checkpoint = models.Checkpoint || model<ICheckpoint>('Checkpoint', CheckpointSchema);
+export const Checkpoint: Model<ICheckpoint> = models.Checkpoint || model<ICheckpoint>("Checkpoint", CheckpointSchema)
 
-export default Checkpoint;
-
-export async function createCheckpoint(checkpoint: typeof Checkpoint) {
+export async function createCheckpoint(checkpoint: ICheckpoint) {
   await db;
-  checkpoint._id = Types.ObjectId();
   return Checkpoint.create(checkpoint);
 }
 
-export async function updateCheckpoint(checkpoint: typeof Checkpoint) {
+export async function updateCheckpoint(checkpoint: ICheckpoint) {
   await db;
   return Checkpoint.updateOne({ _id: checkpoint._id }, checkpoint);
 }

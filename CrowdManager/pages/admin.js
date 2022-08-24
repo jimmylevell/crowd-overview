@@ -27,6 +27,7 @@ export default function Admin() {
       updateCheckpoint(checkpoint)
       .then(() => {
         setMessage('Checkpoint ' + checkpoint.name + ' updated successfully');
+        loadCheckpoints();
       }).catch(err => {
         setError(err);
         setMessage("Error updating checkpoint " + checkpoint.name);
@@ -35,14 +36,13 @@ export default function Admin() {
       createCheckpoint(checkpoint)
       .then(() => {
         setMessage('Checkpoint ' + checkpoint.name +' created successfully' );
+        loadCheckpoints();
       })
       .catch(err => {
         setError(err);
         setMessage("Error creating checkpoint " + checkpoint.name);
       })
     }
-
-    loadCheckpoints();
   }
 
   const loadCheckpoints = async () => {

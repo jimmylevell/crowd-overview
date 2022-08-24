@@ -1,7 +1,7 @@
-import { Schema, model, models, Types } from 'mongoose';
-import db from '../services/db';
+import mongoose, { Document, model, models, Model, Schema } from "mongoose"
+import db from '../utils/db';
 
-export interface IMeasurement {
+export interface IMeasurement extends Document {
   _id: String,
   object_class: Number,
   checkpoint_id: String,
@@ -9,8 +9,7 @@ export interface IMeasurement {
   measured_at: Date,
 }
 
-const MeasurementSchema = new Schema({
-  _id: Types.ObjectId,
+const MeasurementSchema: Schema = new Schema({
   object_class: Number,
   checkpoint_id: String,
   direction: String,
@@ -20,11 +19,11 @@ const MeasurementSchema = new Schema({
   timestamps: true
 })
 
-const Measurement = models.Measurement || model<IMeasurement>('Measurement', MeasurementSchema);
+export const Measurement: Model<IMeasurement> = models.Measurement || model<IMeasurement>("Measurement", MeasurementSchema)
 
-export default Measurement;
 
 export async function getMeasurements() {
 	await db;
+
 	return Measurement.find({}).sort({ createdAt: -1 });
   }

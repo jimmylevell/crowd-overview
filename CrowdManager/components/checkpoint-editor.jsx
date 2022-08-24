@@ -15,8 +15,8 @@ export default function CheckpointEditor(props) {
   } , [props.checkpoint]);
 
   const handleChange = (e) => {
-    const { target, value } = e.target;
-    switch (target) {
+    const { name, value } = e.target;
+    switch (name) {
       case 'checkpointName':
         setName(value);
         break;
