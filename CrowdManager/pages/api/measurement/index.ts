@@ -1,7 +1,7 @@
 import { unstable_getServerSession } from "next-auth/next"
-import { getMeasurements } from "../../model/Measurement"
-import logger from "../../services/logger"
-import { authOptions } from "./auth/[...nextauth]"
+import { getMeasurements } from "../../../model/Measurement"
+import logger from "../../../services/logger"
+import { authOptions } from "../auth/[...nextauth]"
 
 const handler = async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)

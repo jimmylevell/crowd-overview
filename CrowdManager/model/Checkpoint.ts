@@ -1,6 +1,13 @@
 import { Schema, Types, model, models } from 'mongoose';
 import db from '../services/db';
 
+export interface ICheckpoint {
+  _id: String,
+  api_key: String,
+  name: String,
+  connected_checkpoints: [String]
+}
+
 const CheckpointSchema = new Schema({
   _id: Types.ObjectId,
   api_key: String,
@@ -11,12 +18,13 @@ const CheckpointSchema = new Schema({
   timestamps: true
 })
 
-const Checkpoint = new models.Checkpoint || model('Checkpoint', CheckpointSchema);
+const Checkpoint = models.Checkpoint || model<ICheckpoint>('Checkpoint', CheckpointSchema);
 
 export default Checkpoint;
 
 export async function createCheckpoint(checkpoint: typeof Checkpoint) {
   await db;
+  checkpoint._id = Types.ObjectId();
   return Checkpoint.create(checkpoint);
 }
 

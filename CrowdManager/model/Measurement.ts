@@ -1,6 +1,14 @@
 import { Schema, model, models, Types } from 'mongoose';
 import db from '../services/db';
 
+export interface IMeasurement {
+  _id: String,
+  object_class: Number,
+  checkpoint_id: String,
+  direction: String,
+  measured_at: Date,
+}
+
 const MeasurementSchema = new Schema({
   _id: Types.ObjectId,
   object_class: Number,
@@ -12,7 +20,7 @@ const MeasurementSchema = new Schema({
   timestamps: true
 })
 
-const Measurement = new models.Measurement || model('Measurement', MeasurementSchema);
+const Measurement = models.Measurement || model<IMeasurement>('Measurement', MeasurementSchema);
 
 export default Measurement;
 

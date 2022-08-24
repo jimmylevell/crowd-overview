@@ -6,7 +6,7 @@ export default function LoginButton() {
   if (session) {
     return (
       <div className="profile text-right">
-        Welcome, {session.user.email} <br />
+        Welcome, <i className="bi bi-person"></i> {session.user.email} <br />
         <button className="btn btn-outline-primary" onClick={() => signOut()}>Sign out</button>
       </div>
     )

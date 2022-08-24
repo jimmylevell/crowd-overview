@@ -1,8 +1,7 @@
 import { useState, useEffect, createRef } from 'react';
-import { Network } from "vis-network/standalone";
+import { Network, parseDOTNetwork } from "vis-network/standalone";
 
 export default function Graph(props) {
-    const [loading, setLoading] = useState();
     const [data, setData] = useState([]);
     const [appRef, setAppRef] = useState(createRef());
 
@@ -39,13 +38,16 @@ export default function Graph(props) {
       };
 
     useEffect(() => {
-        setData(props.data);
-
-        const network = new Network(appRef.current, data, options)
-        network.stabilize();
+        const object = parseDOTNetwork(props.data)
+        setData(object)
     }, [props.data]);
 
+    useEffect(() => {
+      const network = new Network(appRef.current, data, options)
+      network.stabilize();
+    } , [data]);
+
     return (
-        <div className={ classes.root } ref={ this.state.appRef } />
+        <div className='graph' ref={ appRef } />
     )
 }
