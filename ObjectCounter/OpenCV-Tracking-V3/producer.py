@@ -51,7 +51,6 @@ class ProducerThread(threading.Thread):
         else:
             print('No CUDA/OpenCV GPU found')
             print('\n')
-            raise Exception('No CUDA/OpenCV GPU found')
 
     def get_region_of_interest_selection(self):
         # Extract Region of interest ROI
@@ -84,7 +83,7 @@ class ProducerThread(threading.Thread):
             cv2.imshow("roi", self.roi)
             cv2.imshow("Frame", self.frame)
 
-            key = cv2.waitKey(1)
+            key = cv2.waitKey(0)
             if key == 27:
                 self.add_to_queue(settings._sentinel)
                 break
