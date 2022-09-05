@@ -10,7 +10,7 @@
     "bootstrap": "^5.2.0",
     "bootstrap-icons": "^1.9.1",
     "crypto": "^1.0.1",
-    "mongoose": "^6.5.2",
+    "mongoose": "^6.5.4",
     "next": "^12.2.5",
     "next-auth": "^4.10.2",
     "pino": "^8.4.2",
