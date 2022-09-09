@@ -1,10 +1,14 @@
 __pycache__
 .ipynb_checkpoints
+
+# yolo weights
 yolov4.weights
 yolov3.weights
 yolov3.tf*
 yolov3-tiny.weights
 yolov3-tiny.tf*
+osnet_x0_25_msmt17.pt
+yolov5m.pt
 
 output.avi
 results.avi

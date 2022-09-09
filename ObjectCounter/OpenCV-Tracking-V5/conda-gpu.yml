@@ -1,0 +1,37 @@
+name: opencv-tracking-v5
+
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - cudatoolkit=11.6
+  - cudnn=8.4.1
+  - pytorch
+  - torchvision
+  - pip:
+    - ipykernel
+    - matplotlib>=3.2.2
+    - numpy>=1.18.5
+    - Pillow>=7.1.2
+    - PyYAML>=5.3.1
+    - requests>=2.23.0
+    - scipy>=1.4.1
+    - tqdm>=4.64.0
+    - protobuf<=3.20.1
+    - pandas>=1.1.4
+    - seaborn>=0.11.0
+    - easydict
+    - Cython
+    - h5py
+    - six
+    - tb-nightly
+    - future
+    - yacs
+    - gdown
+    - flake8
+    - yapf
+    - isort==4.3.21
+    - imageio
+    - GitPython
