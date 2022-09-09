@@ -1,0 +1,16 @@
+name: opencv-tracking-v4
+
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - cudatoolkit=11.2
+  - cudnn=8.1.0
+  - pip:
+    - numpy
+    - ipykernel
+    - seaborn
+    - absl-py
+    - scipy
+    - tensorflow
