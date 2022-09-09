@@ -205,6 +205,7 @@ def YoloV3(size=None, channels=3, anchors=yolo_anchors,
            masks=yolo_anchor_masks, classes=80, training=False):
     physical_devices = tf.config.experimental.list_physical_devices('GPU')
     if len(physical_devices) > 0:
+        print("Num GPUs Available: ", len(physical_devices))
         tf.config.experimental.set_memory_growth(physical_devices[0], True)
     x = inputs = Input([size, size, channels], name='input')
 
