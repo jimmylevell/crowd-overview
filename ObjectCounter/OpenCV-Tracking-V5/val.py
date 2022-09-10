@@ -12,7 +12,6 @@ from pathlib import Path
 import shutil
 import threading
 
-
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # yolov5 strongsort root directory
 WEIGHTS = ROOT / 'weights'
@@ -30,7 +29,9 @@ from track import run
 
 
 def setup_evaluation(dst_val_tools_folder):
-    
+    import urllib.request
+    import os
+
     # source: https://github.com/JonathonLuiten/TrackEval#official-evaluation-code
     LOGGER.info('Download official MOT evaluation repo')
     val_tools_url = "https://github.com/JonathonLuiten/TrackEval"
@@ -38,22 +39,28 @@ def setup_evaluation(dst_val_tools_folder):
         Repo.clone_from(val_tools_url, dst_val_tools_folder)
     except git.exc.GitError as err:
         LOGGER.info('Eval repo already downloaded')
-        
+
     LOGGER.info('Get ground-truth txts, meta-data and example trackers for all currently supported benchmarks')
-    gt_data_url = 'https://omnomnom.vision.rwth-aachen.de/data/TrackEval/data.zip'
-    subprocess.run(["wget", "-nc", gt_data_url, "-O", dst_val_tools_folder / 'data.zip']) # python module has no -nc nor -N flag
+    gt_data_url = 'https://download.app.levell.ch/crowdmanager/data.zip'
+    if not os.path.exists(dst_val_tools_folder / "data.zip"):
+        urllib.request.urlretrieve(gt_data_url, dst_val_tools_folder / "data.zip")
     if not (dst_val_tools_folder / 'data').is_dir():
         with zipfile.ZipFile(dst_val_tools_folder / 'data.zip', 'r') as zip_ref:
             zip_ref.extractall(dst_val_tools_folder)
 
     LOGGER.info('Download official MOT images')
-    mot_gt_data_url = 'https://motchallenge.net/data/MOT16.zip'
-    subprocess.run(["wget", "-nc", mot_gt_data_url, "-O", dst_val_tools_folder / 'MOT16.zip']) # python module has no -nc nor -N flag
+    mot_gt_data_url = 'https://download.app.levell.ch/crowdmanager/MOT16.zip'
+    if not os.path.exists(dst_val_tools_folder / "MOT16.zip"):
+        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT16.zip")
     if not (dst_val_tools_folder / 'data' / 'MOT16').is_dir():
         with zipfile.ZipFile(dst_val_tools_folder / 'MOT16.zip', 'r') as zip_ref:
             zip_ref.extractall(dst_val_tools_folder / 'data' / 'MOT16')
-        
-    
+
+    LOGGER.info('Download yolo weights')
+    yolo_weight_url = 'https://download.app.levell.ch/crowdmanager/crowdhuman_yolov5m.pt'
+    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / "crowdhuman_yolov5m.pt"):
+        urllib.request.urlretrieve(yolo_weight_url, dst_val_tools_folder / ".." / "weights" / "crowdhuman_yolov5m.pt")
+
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolo-weights', nargs='+', type=str, default=WEIGHTS / 'crowdhuman_yolov5m.pt', help='model.pt path(s)')
@@ -73,11 +80,11 @@ def parse_opt():
 
 def main(opt):
     check_requirements(requirements=ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
-    
+
     # download eval files
     dst_val_tools_folder = ROOT / 'val_utils'
     setup_evaluation(dst_val_tools_folder)
-    
+
     # set paths
     mot_seqs_path = dst_val_tools_folder / 'data' / opt.benchmark / opt.split
     seq_paths = [p / 'img1' for p in Path(mot_seqs_path).iterdir() if p.is_dir()]
@@ -85,12 +92,12 @@ def main(opt):
     MOT_results_folder = dst_val_tools_folder / 'data' / 'trackers' / 'mot_challenge' / Path(str(opt.benchmark) + '-' + str(opt.split)) / save_dir.name / 'data'
     (MOT_results_folder).mkdir(parents=True, exist_ok=True)  # make
 
-    
+
     if not opt.eval_existing:
 
         processes = []
         nr_gpus = torch.cuda.device_count()
-        
+
         for i, seq_path in enumerate(seq_paths):
 
             device = i % nr_gpus
@@ -115,7 +122,7 @@ def main(opt):
                 "--eval"
             ])
             processes.append(p)
-        
+
         for p in processes:
             p.wait()
 
@@ -123,7 +130,7 @@ def main(opt):
     for src in results:
         if opt.eval_existing:
             dst = MOT_results_folder.parent.parent / opt.eval_existing / 'data' / Path(src.stem + '.txt')
-        else:  
+        else:
             dst = MOT_results_folder / Path(src.stem + '.txt')
         dst.parent.mkdir(parents=True, exist_ok=True)  # make
         shutil.copyfile(src, dst)
@@ -138,7 +145,7 @@ def main(opt):
         "--USE_PARALLEL", "True",\
         "--NUM_PARALLEL_CORES", "4"\
     ])
-    
+
 
 if __name__ == "__main__":
     opt = parse_opt()

@@ -9,6 +9,10 @@ yolov3-tiny.weights
 yolov3-tiny.tf*
 osnet_x0_25_msmt17.pt
 yolov5m.pt
+crowdhuman_yolov5m.pt
+
+# exclude runs
+runs
 
 output.avi
 results.avi
