@@ -1,7 +1,6 @@
 import threading
 import settings
 
-
 class ConsumerThread(threading.Thread):
     def __init__(self):
         super(ConsumerThread, self).__init__()

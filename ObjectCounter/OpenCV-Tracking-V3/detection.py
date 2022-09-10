@@ -12,7 +12,6 @@ class Detection:
         self.direction = 0
         self.detections = 0
 
-
     def __str__(self):
         return "Object ID: {}, Class ID: {}, Score: {}, Direction: {}, Detections: {}".format(self.id, self.class_id, format(self.score,".2f"), format(self.direction,".2f"), self.detections)
 

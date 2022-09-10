@@ -1,8 +1,12 @@
 name: opencv-tracking-v3
 
+channels:
+  - conda-forge
 dependencies:
   - python==3.9.13
   - pip
+  - cudatoolkit=11.2
+  - cudnn=8.1.0
   - pip:
     - ipykernel
     - wget
