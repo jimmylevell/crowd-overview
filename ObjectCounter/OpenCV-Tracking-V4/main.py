@@ -1,7 +1,7 @@
 import sys
 import settings
 
-from producer import check_tf_cuda, check_cv2_cuda, download_weights
+from producer import check_tf_cuda, check_cv2_cuda, download_weights, run
 
 settings.init()
 
@@ -27,3 +27,4 @@ from convert import convert
 convert()
 convert(tiny=True, weights="weights/yolov3-tiny.weights", output="weights/yolov3-tiny.tf")
 
+run()

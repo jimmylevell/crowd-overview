@@ -5,8 +5,8 @@ channels:
 dependencies:
   - python=3.9.13
   - pip
-  - cudatoolkit=11.2
-  - cudnn=8.1.0
+  - cudatoolkit=11.6
+  - cudnn=8.4.1
   - pip:
     - numpy
     - ipykernel
