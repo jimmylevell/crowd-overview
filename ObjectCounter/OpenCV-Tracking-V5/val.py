@@ -25,8 +25,6 @@ if str(ROOT / 'strong_sort') not in sys.path:
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 from yolov5.utils.general import LOGGER, check_requirements, print_args, increment_path
-from track import run
-
 
 def setup_evaluation(dst_val_tools_folder):
     import urllib.request
@@ -94,12 +92,10 @@ def main(opt):
 
 
     if not opt.eval_existing:
-
         processes = []
         nr_gpus = torch.cuda.device_count()
 
         for i, seq_path in enumerate(seq_paths):
-
             device = i % nr_gpus
 
             dst_seq_path = seq_path.parent / seq_path.parent.name
@@ -108,9 +104,9 @@ def main(opt):
                 shutil.move(str(src_seq_path), str(dst_seq_path))
 
             p = subprocess.Popen([
-                "python", "track.py",\
+                "python", "testrunner.py",\
                 "--yolo-weights", "weights/crowdhuman_yolov5m.pt",\
-                "--strong-sort-weights",  "osnet_x0_25_msmt17.pt",\
+                "--strong-sort-weights",  "weights/osnet_x0_25_msmt17.pt",\
                 "--imgsz", str(1280),\
                 "--classes", str(0),\
                 "--name", save_dir.name,\

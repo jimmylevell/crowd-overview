@@ -1,9 +1,9 @@
 name: opencv-tracking-v3
 
 dependencies:
-  - python==3.9
+  - python==3.9.13
   - pip
   - pip:
     - ipykernel
     - wget
-    - opencv-contrib-python
+    - numpy

@@ -83,7 +83,7 @@ class ProducerThread(threading.Thread):
             cv2.imshow("roi", self.roi)
             cv2.imshow("Frame", self.frame)
 
-            key = cv2.waitKey(0)
+            key = cv2.waitKey(1)
             if key == 27:
                 self.add_to_queue(settings._sentinel)
                 break
