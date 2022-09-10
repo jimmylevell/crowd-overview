@@ -36,11 +36,14 @@ Based on [1]
 The following tracking algorithms are analyzed:
 - OpenCV - Various BuiltIn Tracker [OpenCV-Tracking-V1](./OpenCV-Tracking-V1/Readme.md)
 - OpenCV - Self Developed Euclidian Distance [OpenCV-Tracking-V2](./OpenCV-Tracking-V2/Readme.md) or [OpenCV-Tracking-V3](./OpenCV-Tracking-V3/Readme.md)
-- MDNET - Multi-Domain Convolutional Neural Network Tracker (no implementation in this project)
-- ROLO - Recurrent YOLO: A Fast and Accurate Recurrent Neural Network for Video Object Detection and Tracking (no implementation in this project)
-- GOTURN - Generic Object Tracking Using Regression Networks (no implementation in this project)
-- DeepSort - Simple Online and Realtime Tracking with a Deep Association Metric [OpenCV-Tracking-V4](./OpenCV-Tracking-V4/Readme.md): one of the most widely used object tracking architectures
-- StrongSORT with OSNet [OpenCV-Tracking-V5](./OpenCV-Tracking-V5/Readme.md): within this project the most performant object tracker. Therefore this tracker is used for the final implementation.
+- [FairMot](https://github.com/ifzhang/FairMOT) -  (not implement within this project)
+- [ByteTrack](https://github.com/ifzhang/ByteTrack) - (not implemented within this project)
+- [DeepSort](https://github.com/nwojke/deep_sort) - Simple Online and Realtime Tracking with a Deep Association Metric [OpenCV-Tracking-V4](./OpenCV-Tracking-V4/Readme.md): one of the most widely used object tracking architectures
+- [StrongSORT](https://github.com/dyhBUPT/StrongSORT) with [OSNet](https://github.com/mikel-brostrom/Yolov5_StrongSORT_OSNet) [OpenCV-Tracking-V5](./OpenCV-Tracking-V5/Readme.md): within this project the most performant object tracker. Therefore this tracker is used for the final implementation.
+
+The algorithms were compared based on (https://motchallenge.net/results/MOT20/?det=All) and on implementation availabilities. Furthermore the algorithms had to be freely accessible.
+
+This project continues on information based on this article: https://arxiv.org/pdf/2202.13514.pdf
 
 Based on [2]
 
@@ -63,41 +66,14 @@ The algorithm is based on the following steps:
 
 Based on [6]
 
-### MDNET
-Multi-Domain Net is a type of object tracking algorithm which leverages large-scale data for training. Its objective is to learn vast variations and spatial relationships.
-MDNet consists of pretraining and online visual tracking:
-- Pretraining: In pretraining, the network is required to learn multi-domain representation. To achieve this, the algorithm is trained on multiple annotated videos to learn representation and spatial features.
-- Online visual tracking: Once pre-training is done, the domain-specific layers are removed and the network is only left with shared layers, which consist of learned representations. During inference, a binary classification layer is added, which is trained or fine-tuned online.
+### CrowdTrack
+There has been remarkable progress on object detection and re-identification in recent years which are the core components for multi-object tracking. However, little attention has been focused on accomplishing the two tasks in a single network to improve the inference speed. The initial attempts along this path ended up with degraded results mainly because the re-identification branch is not appropriately learned. In this work, we study the essential reasons behind the failure, and accordingly present a simple baseline to addresses the problems. It remarkably outperforms the state-of-the-arts on the MOT challenge datasets at 30 FPS. We hope this baseline could inspire and help evaluate new ideas in this field.
 
-This technique saves time as well as it has proven to be an effective online-based tracking algorithm.
+### ByteTrack
+Multi-object tracking (MOT) aims at estimating bounding boxes and identities of objects in videos. Most methods obtain identities by associating detection boxes whose scores are higher than a threshold. The objects with low detection scores, e.g. occluded objects, are simply thrown away, which brings non-negligible true object missing and fragmented trajectories. To solve this problem, we present a simple, effective and generic association method, tracking by associating every detection box instead of only the high score ones. For the low score detection boxes, we utilize their similarities with tracklets to recover true objects and filter out the background detections. When applied to 9 different state-of-the-art trackers, our method achieves consistent improvement on IDF1 scores ranging from 1 to 10 points. To put forwards the state-of-the-art performance of MOT, we design a simple and strong tracker, named ByteTrack. For the first time, we achieve 80.3 MOTA, 77.3 IDF1 and 63.1 HOTA on the test set of MOT17 with 30 FPS running speed on a single V100 GPU.
 
-Based on [3]
+Based on [8]
 
-### ROLO - ROLO—Recurrent YOLO
-ROLO combines two types of neural networks: one is CNN which is used to extract spatial information while the other is an LSTM network which is used for finding the trajectory of the target object.
-
-At each time step, spatial information is extracted and sent to the LSTM, which then returns the location of the tracked object.
-
-![ROLO](../Documentation/ROLOFunctionality.png)
-We can use the above diagram to understand how ROLO works:
-The video sequence is fed into the YOLO architecture which is primarily made of CNN, here features are extracted as well as bounding boxes are detected.
-The visual features and bounding boxes are then concatenated and fed to the LSTM
-The LSTM then predicts the trajectory of the objects.
-
-Based on [3]
-
-### GOTURN - Generic Object Tracking Using Regression Networks
-Deep Regression Networks are offline training-based models. This algorithm learns a generic relationship between object motion and appearance and can be used to track objects that do not appear in the training set.
-
-Online tracker algorithms are slow and do not perform well in real-time. This is due there inability to take advantage of a large number of videos to improve their performance during training.
-
-Offline tracker algorithms, on the other hand, can be trained to handle rotations, changes in viewpoint, lighting changes, and other complex challenges.
-
-***Generic Object Tracking Using Regression Networks*** or GOTURN uses a regression-based approach to tracking objects. Essentially, they regress directly to locate target objects with just a single feed-forward pass through the network. The input of the network is a search region from the ***current*** frame and a target from the ***previous*** frame. The network then compares these images to find the target object in the current image.
-
-![GOTURN](../Documentation/GOTURNFunctionality.png)
-
-Based on [3]
 
 ### DeepSort - Deep Simple Online Real-time Tracker [OpenCV-Tracking-V4](./OpenCV-Tracking-V4/Readme.md)
 Is an extension of SORT which improves the matching procedures and reduces the number of identity switches by adding visual appearance descriptor or appearance features. Therefore it obtains higher accuracy with the use of motion measurement and appearance features.
@@ -117,7 +93,13 @@ Based on [3]
 
 ### StrongSORT with OSNet [OpenCV-Tracking-V5](./OpenCV-Tracking-V5/Readme.md)
 
-Based on [5]
+StrongSORT which combines motion and appearance information based on OSNet in order to tracks the objects. It can track any object that your Yolov5 model was trained to detect.
+
+***StrongSort***
+
+Existing Multi-Object Tracking (MOT) methods can be roughly classified as tracking-by-detection and joint-detection-association paradigms. Although the latter has elicited more attention and demonstrates comparable performance relative to the former, we claim that the tracking-by-detection paradigm is still the optimal solution in terms of tracking accuracy. In this paper, we revisit the classic tracker DeepSORT and upgrade it from various aspects, i.e., detection, embedding and association. The resulting tracker, called StrongSORT, sets new HOTA and IDF1 records on MOT17 and MOT20. We also present two lightweight and plug-and-play algorithms to further refine the tracking results. Firstly, an appearance-free link model (AFLink) is proposed to associate short tracklets into complete trajectories. To the best of our knowledge, this is the first global link model without appearance information. Secondly, we propose Gaussian-smoothed interpolation (GSI) to compensate for missing detections. Instead of ignoring motion information like linear interpolation, GSI is based on the Gaussian process regression algorithm and can achieve more accurate localizations. Moreover, AFLink and GSI can be plugged into various trackers with a negligible extra computational cost (591.9 and 140.9 Hz, respectively, on MOT17). By integrating StrongSORT with the two algorithms, the final tracker StrongSORT++ ranks first on MOT17 and MOT20 in terms of HOTA and IDF1 metrics and surpasses the second-place one by 1.3 - 2.2. Code will be released soon.
+
+Based on [7]
 
 ## Terminology
 ***Image Tracking***
@@ -160,6 +142,16 @@ For this project, we will be using virtual environments. This is a tool that hel
 ### Object Detection
 
 ### Object Tracking
+ The horizontal
+axis is MOTA, the vertival axis is IDF1, and the radius of the circle is HOTA
+
+![MOTA vs IDF1](../Documentation/ObjectDetectionPerformance.png)
+
+based on: https://arxiv.org/pdf/2202.13514.pdf
+
+Pedestrian Detection Challenge. This benchmark contains 8 challenging video sequences (4 train, 4 test) in unconstrained environments. Tracking and evaluation are done in image coordinates. All sequences have been annotated with high accuracy, strictly following a well-defined protocol.
+based on https://motchallenge.net/data/MOT20/
+
 
 
 ## Production
@@ -171,3 +163,7 @@ For this project, we will be using virtual environments. This is a tool that hel
 [4] https://opencv.org/
 [5] https://pysource.com/2021/01/28/object-tracking-with-opencv-and-python/
 [6] https://www.analyticsvidhya.com/blog/2022/04/building-vehicle-counter-system-using-opencv/
+[7] https://github.com/dyhBUPT/StrongSORT
+[8] https://kaiyangzhou.github.io/deep-person-reid/
+[9] https://github.com/ifzhang/ByteTrack
+[10]
