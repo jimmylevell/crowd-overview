@@ -7,10 +7,10 @@
     "lint": "npx next lint"
   },
   "dependencies": {
-    "bootstrap": "^5.2.0",
+    "bootstrap": "^5.2.1",
     "bootstrap-icons": "^1.9.1",
     "crypto": "^1.0.1",
-    "mongoose": "^6.5.2",
+    "mongoose": "^6.6.0",
     "next": "^12.2.5",
     "next-auth": "^4.10.2",
     "pino": "^8.4.2",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/react": "^18.0.17",
     "eslint": "8.22.0",
-    "eslint-config-next": "12.2.5",
+    "eslint-config-next": "12.3.0",
     "eslint-config-prettier": "^8.5.0"
   }
 }
