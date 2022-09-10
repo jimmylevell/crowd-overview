@@ -27,4 +27,4 @@ from convert import convert
 convert()
 convert(tiny=True, weights="weights/yolov3-tiny.weights", output="weights/yolov3-tiny.tf")
 
-run()
+run(use_video_file=True, video_file_path="data/video/los_angeles.mp4", roi_selection=True)

@@ -46,6 +46,7 @@ def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="l
 
         # 1. Object Detection
         roi = frame[int(roi_coordinates[1]):int(roi_coordinates[1] + roi_coordinates[3]), int(roi_coordinates[0]):int(roi_coordinates[0] + roi_coordinates[2])]
+        cv2.rectangle(frame, (roi_coordinates[0], roi_coordinates[1]), (roi_coordinates[0] + roi_coordinates[2], roi_coordinates[1] + roi_coordinates[3]), (255, 0, 0), 2)
         mask = object_detector.apply(roi)
 
         # remove noise from the mask

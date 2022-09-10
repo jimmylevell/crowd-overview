@@ -13,8 +13,10 @@ from keras import backend as K
 
 import settings
 
+settings.init()
+
 # Load the model
-from yolov3_tf2.models import YoloV3
+from yolov3_tf2.models import YoloV3, YoloV3Tiny
 from yolov3_tf2.dataset import transform_images
 from yolov3_tf2.utils import convert_boxes
 
@@ -101,7 +103,10 @@ def run_non_maxima_suppression(detections, nms_max_overlap):
     indices = preprocessing.non_max_suppression(boxs, classes, nms_max_overlap, scores)
     return [detections[i] for i in indices]
 
-def run():
+def get_region_of_interest(frame, roi_coordinates):
+    return frame[int(roi_coordinates[1]):int(roi_coordinates[1] + roi_coordinates[3]), int(roi_coordinates[0]):int(roi_coordinates[0] + roi_coordinates[2])]
+
+def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="los_angeles.mp4", roi_selection=True):
     # Set the flags for the model
     FLAGS = flags.FLAGS
     FLAGS(sys.argv[:1])
@@ -110,11 +115,11 @@ def run():
     tf.compat.v1.disable_v2_behavior()
 
     # CONFIG
-    input_size = 288  # 416
-    output_video = False
-    max_cosine_distance = 0.5       # is it the same object?
-    nn_budget = None                # number of features to be stored in the memory
-    nms_max_overlap = 0.8           # non-maxima suppression, i.e. removes all boxes with a lower score than the max box
+    input_size = settings.input_size
+    output_video = settings.output_video
+    max_cosine_distance = settings.max_cosine_distance       # is it the same object?
+    nn_budget = settings.nn_budget                # number of features to be stored in the memory
+    nms_max_overlap = settings.nms_max_overlap           # non-maxima suppression, i.e. removes all boxes with a lower score than the max box
     model_filename = 'model_data/mars-small128.pb'          # pre-trained model for pedestrian tracking
 
     # Variable Section
@@ -125,9 +130,21 @@ def run():
     counter = []
 
     # load video
-    vid = cv2.VideoCapture('./data/video/los_angeles.mp4')
+    if use_web_cam:
+        vid = cv2.VideoCapture(cam_index)
+    elif use_video_file:
+        vid = cv2.VideoCapture(video_file_path)
+    else:
+        print("Error: No video source selected.")
+        sys.exit(1)
+
     frame = check_video_present(vid)
-    roi = get_region_of_interest_selection(frame)
+
+    if roi_selection:
+        roi_coordinates = get_region_of_interest_selection(frame)
+    else:
+        roi_coordinates = (284, frame.shape[2], frame.shape[1], frame.shape[0])
+        print("Default Region of interest: ", roi_coordinates)
     out = get_output_video(vid)
 
     # initialaize encoder
@@ -139,10 +156,12 @@ def run():
         with tf.Session() as sess:
             K.set_session(sess)
 
-            yolo = YoloV3(classes=len(class_names), size=input_size)
-            yolo.load_weights('./weights/yolov3.tf')
-            #yolo = YoloV3Tiny(classes=len(class_names))
-            #yolo.load_weights('./weights/yolov3-tiny.tf')
+            if settings.tiny:
+                yolo = YoloV3Tiny(classes=len(class_names))
+                yolo.load_weights('./weights/yolov3-tiny.tf')
+            else:
+                yolo = YoloV3(classes=len(class_names), size=input_size)
+                yolo.load_weights('./weights/yolov3.tf')
 
             while True:
                 _, img = vid.read()
@@ -152,7 +171,9 @@ def run():
 
                 t1 = time.time()
 
-                img_in = align_video_to_model(img, input_size)
+                roi = get_region_of_interest(img, roi_coordinates)
+                cv2.rectangle(img, (roi_coordinates[0], roi_coordinates[1]), (roi_coordinates[0] + roi_coordinates[2], roi_coordinates[1] + roi_coordinates[3]), (255, 0, 0), 2)
+                img_in = align_video_to_model(roi, input_size)
                 print("Time required to align video from: " + str(time.time()-t1))
 
                 # object detection using YOLO
@@ -160,16 +181,15 @@ def run():
                 # scores 2D shape: (1, 100)
                 # classes 2D shape: (1, 100)
                 # nums 1D shape: (1,)
-
                 boxes, scores, classes, nums = yolo.predict(img_in, steps=1)
                 print("Time required to predict: " + str(time.time()-t1))
                 classes = classes[0]
 
                 # get the bounding boxes of detected objects
-                converted_boxes = convert_boxes(img, boxes[0])
+                converted_boxes = convert_boxes(roi, boxes[0])
 
                 # get the feature vectors of the detected objects
-                features = encoder(img, converted_boxes)
+                features = encoder(roi, converted_boxes)
                 print("Time required to encode: " + str(time.time()-t1))
 
                 # initialize detections
@@ -194,11 +214,11 @@ def run():
                     color = [i * 255 for i in color]                                # convert to RGB
 
                     # draw bounding box
-                    cv2.rectangle(img, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), color, 2)
+                    cv2.rectangle(roi, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), color, 2)
 
                     # draw label with class name and track id
-                    cv2.rectangle(img, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name) + len(str(track.track_id))) * 17, int(bbox[1])), color, -1)
-                    cv2.putText(img, class_name + "-" + str(track.track_id), (int(bbox[0]), int(bbox[1] - 10)), 0, 0.75,(255, 255, 255), 2)
+                    cv2.rectangle(roi, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name) + len(str(track.track_id))) * 17, int(bbox[1])), color, -1)
+                    cv2.putText(roi, class_name + "-" + str(track.track_id), (int(bbox[0]), int(bbox[1] - 10)), 0, 0.75,(255, 255, 255), 2)
 
                     # draw trajectory
                     center = (int(((bbox[0]) + (bbox[2])) / 2), int(((bbox[1]) + (bbox[3])) / 2))
@@ -210,16 +230,14 @@ def run():
                             continue
 
                         thickness = int(np.sqrt(64/float(j+1))*2)       # thickness of the line is inversely proportional to the number of points
-                        cv2.line(img, (pts[track.track_id][j-1]), (pts[track.track_id][j]), color, thickness)
-
+                        cv2.line(roi, (pts[track.track_id][j-1]), (pts[track.track_id][j]), color, thickness)
 
                     # count the number of objects in the ROI
                     height, width, _ = img.shape
-                    cv2.line(img, (0, int(3*height/6+height/20)), (width, int(3*height/6+height/20)), (0, 255, 0), thickness=2)
-                    cv2.line(img, (0, int(3*height/6-height/20)), (width, int(3*height/6-height/20)), (0, 255, 0), thickness=2)
+                    cv2.line(roi, (0, int(3*height/6+height/20)), (width, int(3*height/6+height/20)), (0, 255, 0), thickness=2)
+                    cv2.line(roi, (0, int(3*height/6-height/20)), (width, int(3*height/6-height/20)), (0, 255, 0), thickness=2)
 
                     center_y = int(((bbox[1])+(bbox[3]))/2)
-
                     if center_y <= int(3*height/6+height/20) and center_y >= int(3*height/6-height/20):
                         if class_name == 'car' or class_name == 'truck':
                             counter.append(int(track.track_id))
@@ -236,7 +254,6 @@ def run():
                 cv2.putText(img, "FPS: {:.2f}".format(fps), (0,30), 0, 1, (0,0,255), 2)
 
                 cv2.imshow('output', img)
-                cv2.resizeWindow('output', 1024, 768)
 
                 if output_video:
                     out.write(img)

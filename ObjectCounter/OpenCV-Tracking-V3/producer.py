@@ -78,6 +78,9 @@ class ProducerThread(threading.Thread):
             detections = self.filter_detections(detections)
 
             self.visualize_object_tracking(detections)
+            # https://www.geeksforgeeks.org/python-opencv-selectroi-function/
+            # https://www.geeksforgeeks.org/python-opencv-cv2-rectangle-method/
+            cv2.rectangle(self.frame, (self.roi_coordinates[0], self.roi_coordinates[1]), (self.roi_coordinates[0] + self.roi_coordinates[2], self.roi_coordinates[1] + self.roi_coordinates[3]), (255, 0, 0), 2)
             self.add_to_queue(detections)
 
             cv2.imshow("roi", self.roi)
