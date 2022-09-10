@@ -41,9 +41,9 @@ The following tracking algorithms are analyzed:
 - [DeepSort](https://github.com/nwojke/deep_sort) - Simple Online and Realtime Tracking with a Deep Association Metric [OpenCV-Tracking-V4](./OpenCV-Tracking-V4/Readme.md): one of the most widely used object tracking architectures
 - [StrongSORT](https://github.com/dyhBUPT/StrongSORT) with [OSNet](https://github.com/mikel-brostrom/Yolov5_StrongSORT_OSNet) [OpenCV-Tracking-V5](./OpenCV-Tracking-V5/Readme.md): within this project the most performant object tracker. Therefore this tracker is used for the final implementation.
 
-The algorithms were compared based on (https://motchallenge.net/results/MOT20/?det=All) and on implementation availabilities. Furthermore the algorithms had to be freely accessible.
+The above list is based on the results of the [MOT20](https://motchallenge.net/results/MOT20/?det=All) benchmark and public available implementation of these algorithms within GitHub.
 
-This project continues on information based on this article: https://arxiv.org/pdf/2202.13514.pdf
+This project heavily relies on the information of this article: https://arxiv.org/pdf/2202.13514.pdf
 
 Based on [2]
 
@@ -53,9 +53,11 @@ Since today, OpenCV has been used in several mainstream applications, including 
 Based on [4]
 
 ***OpenCV - Various Tracker***
-See [OpenCV-Tracking-V1](./OpenCV-Tracking-V1/Readme.md) for more details.
+
+OpenCV provides a number of built-in tracker algorithms. See [OpenCV-Tracking-V1](./OpenCV-Tracking-V1/Readme.md) for more details.
 
 ***OpenCV - Euclidian Distance***
+
 Is based on the assumption that the object is moving in a straight line. Therefore the distance between the current and the previous position is calculated. If the distance is below a certain threshold the object is considered to be the same object. If the distance is above the threshold a new object is created.
 
 The algorithm is based on the following steps:
@@ -67,10 +69,14 @@ The algorithm is based on the following steps:
 Based on [6]
 
 ### CrowdTrack
-There has been remarkable progress on object detection and re-identification in recent years which are the core components for multi-object tracking. However, little attention has been focused on accomplishing the two tasks in a single network to improve the inference speed. The initial attempts along this path ended up with degraded results mainly because the re-identification branch is not appropriately learned. In this work, we study the essential reasons behind the failure, and accordingly present a simple baseline to addresses the problems. It remarkably outperforms the state-of-the-arts on the MOT challenge datasets at 30 FPS. We hope this baseline could inspire and help evaluate new ideas in this field.
+The model combines all steps required for object tracking within a single neural network. The researchers implemented a powerful baseline which outperformed state of the art methods on the MOT challege. The model reached 30 FPS on the dataset.
 
 ### ByteTrack
-Multi-object tracking (MOT) aims at estimating bounding boxes and identities of objects in videos. Most methods obtain identities by associating detection boxes whose scores are higher than a threshold. The objects with low detection scores, e.g. occluded objects, are simply thrown away, which brings non-negligible true object missing and fragmented trajectories. To solve this problem, we present a simple, effective and generic association method, tracking by associating every detection box instead of only the high score ones. For the low score detection boxes, we utilize their similarities with tracklets to recover true objects and filter out the background detections. When applied to 9 different state-of-the-art trackers, our method achieves consistent improvement on IDF1 scores ranging from 1 to 10 points. To put forwards the state-of-the-art performance of MOT, we design a simple and strong tracker, named ByteTrack. For the first time, we achieve 80.3 MOTA, 77.3 IDF1 and 63.1 HOTA on the test set of MOT17 with 30 FPS running speed on a single V100 GPU.
+Multi-object tracking (MOT) aims at estimating bounding boxes and identities of objects in videos. Most methods obtain identities by associating detection boxes whose scores are higher than a threshold. The objects with low detection scores, e.g. occluded objects, are simply thrown away, which brings non-negligible true object missing and fragmented trajectories.
+
+TO address this issue, the researchers propose a simple, but effective method, tracking by associating every detection box instead of only the high score ones. For the low score detection boxes, their similarities with tracklets are being used to recover true objects and filter out background detections.
+
+The tracker performs a 80.3 MOTA, 77.3 IDF1 and 63.1 HOTA on the test set of MOT17 with 30 FPS running speed on a single V100 GPU.
 
 Based on [8]
 
@@ -93,7 +99,7 @@ Based on [3]
 
 ### StrongSORT with OSNet [OpenCV-Tracking-V5](./OpenCV-Tracking-V5/Readme.md)
 
-StrongSORT which combines motion and appearance information based on OSNet in order to tracks the objects. It can track any object that your Yolov5 model was trained to detect.
+StrongSORT combines motion and appearance information based on OSNet in order to tracks the objects. It can track any object that your Yolov5 model was trained to detect.
 
 ***StrongSort***
 
@@ -109,6 +115,12 @@ Image tracking is the task of automatically recognizing and tracking objects wit
 ***Video Tracking***
 
 Video tracking is the task of tracking a moving object in a video. The idea of video tracking is to associate or establish a relationship between target objects as they appear in each video frame. In other words, video tracking is analyzing the video frames sequentially and stitching the past location of the object with the present location by predicting and creating a bounding box around it.
+
+Based on [1]
+
+***Identity Switching***
+
+Identity switching is a problem in object tracking where the tracker assigns a new identity to an object that has already been tracked. This can happen when the tracker loses track of an object and then re-identifies it as a new object.
 
 Based on [1]
 
@@ -142,14 +154,14 @@ For this project, we will be using virtual environments. This is a tool that hel
 ### Object Detection
 
 ### Object Tracking
- The horizontal
-axis is MOTA, the vertival axis is IDF1, and the radius of the circle is HOTA
+Within the following graph the most resent object tracking algorithms are shown according to their performance. The horizontal axis is MOTA, the vertical axis is IDF1, and the radius of the circle is HOTA
 
 ![MOTA vs IDF1](../Documentation/ObjectDetectionPerformance.png)
 
 based on: https://arxiv.org/pdf/2202.13514.pdf
 
-Pedestrian Detection Challenge. This benchmark contains 8 challenging video sequences (4 train, 4 test) in unconstrained environments. Tracking and evaluation are done in image coordinates. All sequences have been annotated with high accuracy, strictly following a well-defined protocol.
+As evaluation dataset the MOT challenge was being used. The MOT challenge is a benchmark for the detection of pedestrians. This benchmark contains 8 challenging video sequences (4 train, 4 test) in unconstrained environments. Tracking and evaluation are done in image coordinates. All sequences have been annotated with high accuracy, strictly following a well-defined protocol.
+
 based on https://motchallenge.net/data/MOT20/
 
 
@@ -158,12 +170,19 @@ based on https://motchallenge.net/data/MOT20/
 
 ## References
 [1] https://towardsdatascience.com/ug-vod-the-ultimate-guide-to-video-object-detection-816a76073aef
+
 [2] https://livecodestream.dev/post/object-tracking-with-opencv/#:~:text=Object%20tracking%20using%20OpenCV%20is,CSRT%2C%20GOTURN%2C%20and%20MediandFlow
+
 [3] https://www.v7labs.com/blog/object-tracking-guide
+
 [4] https://opencv.org/
+
 [5] https://pysource.com/2021/01/28/object-tracking-with-opencv-and-python/
+
 [6] https://www.analyticsvidhya.com/blog/2022/04/building-vehicle-counter-system-using-opencv/
+
 [7] https://github.com/dyhBUPT/StrongSORT
+
 [8] https://kaiyangzhou.github.io/deep-person-reid/
+
 [9] https://github.com/ifzhang/ByteTrack
-[10]

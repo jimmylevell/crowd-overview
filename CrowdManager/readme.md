@@ -4,7 +4,7 @@
 Provides the possibility to manage the checkpoint and view the movement of the crowd based on the aggregated information.
 Furthermore the backend is used by the checkpoints to upload their measurements.
 
-The application consists of a frontend written in react and a backend written in NextJS. For the storage of the data mongodb is used.
+The application consists of a frontend written in react and a backend written in NextJS. As storage mongodb is used.
 
 ![Crowd Manager](../Documentation/architecture.png)
 
@@ -12,21 +12,21 @@ The application consists of a frontend written in react and a backend written in
 The website will be structured in an traditional frontend and backend architecture.
 ![Frontend Backend](../Documentation/FrontendBackend.png)
 
-For simplifying the development and deployment of the application CI/CD will be used.
+To simplifying the development and deployment of the application a CI/CD Pipeline will be used.
 ![CI/CD](../Documentation/CI_CD.png)
 
 ### Frontend
-Using react in combination the bootstrap to create a intuitive UI.
+React will be used as frontend framework. As CSS framework Bootstrap will be used.
 
 ### Backend
-Backend API is using NextJS and mongodb as datastore.
+The backend is developed using NextJS. As database mongodb will be used.
 
 ## Database Layout
 ![Database Layout](../Documentation/DataSchema.png)
 
 ## Development
 ### Visual Studio Code
-The project is developed using Visual Studio Code. For the development a dev container is used. This container contains all the necessary tools to develop the application. The container is based on the official node image.
+The project is developed using Visual Studio Code. For the development a dev container is available. This container contains all the necessary tools to develop the application. The container is based on the official node image.
 
 ### Environment Variables
 To control the application behavior the following environment variables are available:
@@ -89,6 +89,6 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 ## Production
 The application is deployed on a Docker Swarm cluster. The docker-compose file is located in the root directory of the project.
 
-The deployment is done using GitHub Actions.
+The build and deployment is done using GitHub Actions.
 
 The database will be hosted on a MongoDB cluster within the cloud.

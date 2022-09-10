@@ -33,7 +33,7 @@ Technology: JavaScript, Azure Function
 The document database should provide persistency for the individual measurements and the aggregations. The database is only communicating with the backend through a secure channel.
 
 #### Components - Simulator - [Repo]()
-Purpose: virtual environment to test the application setup.
+Virtual environment to test the application setup.
 
 Technology: Unity
 
