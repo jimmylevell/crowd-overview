@@ -5,7 +5,7 @@ from consumer import ConsumerThread
 from producer import ProducerThread
 
 #Based on: https://pysource.com/2021/10/05/object-tracking-from-scratch-opencv-and-python/
-# Using YOLOv4 for object detection and tracking.
+# Using YOLOv4 for object detection and Euclidian Distance for tracking.
 
 def main():
     settings.init()
