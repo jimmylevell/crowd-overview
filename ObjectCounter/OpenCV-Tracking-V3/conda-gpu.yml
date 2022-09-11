@@ -13,3 +13,4 @@ dependencies:
     - numpy
     - GitPython
     - scipy
+    - matplotlib

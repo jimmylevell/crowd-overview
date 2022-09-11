@@ -67,7 +67,7 @@ class ProducerThread(threading.Thread):
             cv2.rectangle(self.roi, (detection.x, detection.y), (detection.x + detection.w, detection.y + detection.h), (0, 255, 0), 3)
 
     def filter_detections(self, detections):
-        return [detection for detection in detections if detection.score > 0.5 and detection.detections > 5]
+        return [detection for detection in detections if detection.score > settings.confidence_threshold and detection.detections > settings.repetitions_threshold]
 
     def run(self):
         while True:
