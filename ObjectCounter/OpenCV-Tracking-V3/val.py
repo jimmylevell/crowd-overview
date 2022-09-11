@@ -47,9 +47,8 @@ def main():
 
     for i, seq_path in enumerate(seq_paths):
         # run tracking
-        dst_seq_path = seq_path.parent / seq_path.parent.name
         print("Run tracking on sequence", seq_path)
-        run(files=dst_seq_path.iterdir(), name=seq_path.parent.name, object_class=0)
+        run(files=seq_path.iterdir(), name=seq_path.parent.name, object_class=0)
 
     # run the evaluation on the generated txts
     subprocess.run([

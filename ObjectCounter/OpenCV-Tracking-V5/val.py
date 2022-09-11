@@ -1,7 +1,6 @@
 import os
 import sys
 import torch
-import logging
 import subprocess
 from subprocess import Popen
 import argparse
@@ -10,7 +9,6 @@ from git import Repo
 import zipfile
 from pathlib import Path
 import shutil
-import threading
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # yolov5 strongsort root directory

@@ -71,9 +71,6 @@ def run(files=[], name="", object_class=0):
             for img in files:
                 frame_idx = int(img.name.split('.')[0])
                 img = cv2.imread(str(img))
-                if img is None:
-                    print('Completed')
-                    break
 
                 img_in = align_video_to_model(img, input_size)
                 boxes, scores, classes, nums = yolo.predict(img_in, steps=1)

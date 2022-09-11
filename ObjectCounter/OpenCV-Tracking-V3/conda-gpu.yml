@@ -11,3 +11,5 @@ dependencies:
     - ipykernel
     - wget
     - numpy
+    - GitPython
+    - scipy
