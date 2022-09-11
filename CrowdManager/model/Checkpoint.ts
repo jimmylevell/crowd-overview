@@ -37,3 +37,8 @@ export async function deleteCheckpoint(checkpointId: String) {
   await db;
   return Checkpoint.deleteOne({ _id: checkpointId });
 }
+
+export async function getCheckpointByAPIKey(api_key: String) {
+  await db;
+  return Checkpoint.findOne({ api_key: api_key });
+}

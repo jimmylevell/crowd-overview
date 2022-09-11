@@ -5,6 +5,7 @@ import Layout from "../components/layout";
 import Checkpoint from "../components/checkpoint";
 import CheckpointEditor from '../components/checkpoint-editor';
 import ToastNotification from '../components/toastnotification';
+import MeasurementsModal from '../components/measurements-modal';
 const Graph = dynamic(() => import('../components/graph'), {
   ssr: false,
 })
@@ -74,6 +75,10 @@ export default function Admin() {
     setcheckpointSelected(checkpoint);
   }
 
+  const onMeasurement = (checkpoint) => {
+    setcheckpointSelected(checkpoint);
+  }
+
   return (
     <Layout>
       <h1>Admin</h1>
@@ -94,6 +99,10 @@ export default function Admin() {
             onSubmit={handleCheckpointChange}
           />
 
+          <MeasurementsModal
+            checkpoint={checkpointSelected}
+          />
+
           {loading && <div>Loading...</div>}
 
           {checkpoints.length > 0 ? (
@@ -103,6 +112,7 @@ export default function Admin() {
                 checkpoint={checkpoint}
                 onDelete={() => onDelete(checkpoint._id)}
                 onEdit={() => onEdit(checkpoint)}
+                onMeasurement={() => onMeasurement(checkpoint)}
               />
             ))
           ) : (

@@ -1,4 +1,4 @@
-export default function Checkpoint({ onDelete, onEdit, onLog, checkpoint }) {
+export default function Checkpoint({ onDelete, onEdit, onMeasurement, checkpoint }) {
   return (
     <div className="card mb-2">
       <div className="card-body">
@@ -17,7 +17,9 @@ export default function Checkpoint({ onDelete, onEdit, onLog, checkpoint }) {
         <button
           type="button"
           className="btn btn-primary m-1"
-          onClick={onLog}
+          onClick={onMeasurement}
+          data-bs-toggle="modal"
+          data-bs-target="#measurementsmodal"
         >
           <i className="bi bi-file-earmark-text"></i> View Log
         </button>
