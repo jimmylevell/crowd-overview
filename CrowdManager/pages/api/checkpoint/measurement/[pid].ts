@@ -1,8 +1,18 @@
 import { unstable_getServerSession } from "next-auth/next"
+import Pusher from 'pusher'
+
 import { getMeasurementsByCheckpointId, createMeasurements } from "../../../../model/Measurement"
 import { getCheckpointByAPIKey } from "../../../../model/Checkpoint"
 import logger from "../../../../services/logger"
 import { authOptions } from "../../auth/[...nextauth]"
+
+const pusher = new Pusher({
+  appId: "1476056",
+  key: "0177fb2397ec95132111",
+  secret: "c9cf7715c818b232f2e9",
+  cluster: "eu",
+  useTLS: true
+});
 
 const handler = async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)
@@ -35,6 +45,10 @@ const handler = async (req, res) => {
         measurements = await createMeasurements(checkpoint, req.body.measurements)
         logger.info('Measurements uploaded successfully')
         res.status(200).json({ response: 'success', measurements: measurements })
+
+        pusher.trigger("measurement", "new_measurement", {
+          measurements: await getMeasurementsByCheckpointId(checkpoint._id)
+        });
       }
       catch (ex) {
         logger.error(ex)

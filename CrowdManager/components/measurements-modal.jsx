@@ -1,9 +1,22 @@
 import { useState, useEffect } from 'react';
+import Pusher from 'pusher-js';
 
 export default function MeasurementsModal(props) {
   const [measurements, setMeasurements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [checkpoint, setCheckpoint] = useState();
+
+  useEffect(() => {
+    const pusher = new Pusher('0177fb2397ec95132111', {
+      cluster: 'eu'
+    });
+
+    const channel = pusher.subscribe('measurement')
+
+    channel.bind('new_measurement', data => {
+      setMeasurements(data.measurements)
+    })
+  }, []);
 
   useEffect(() => {
     if (props.checkpoint) {
