@@ -60,7 +60,7 @@ def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="l
         for cnt in contours:
             # Calculate area and remove small elements
             area = cv2.contourArea(cnt)
-            if area > 100:
+            if area > settings.min_area:
                 x, y, w, h = cv2.boundingRect(cnt)
                 detections.append([x, y, w, h])
 

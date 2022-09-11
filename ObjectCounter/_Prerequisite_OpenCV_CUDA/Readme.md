@@ -1,20 +1,18 @@
 # Prerequisites
-The neural network is performing badly when executed only on a CPU.
-To improve the performance, a GPU is required. OpenCV supports CUDA and OpenCV but one is required to manually compile it. The neural network frameworks like Tensorflow and PyTorch support CUDA and OpenCL out of the box.
-
+OpenCV and the neural network libraries PyTorch and Tensorflow are very resource intensive frameworks. All of these frameworks can run on a CPU, but one must consider that the performance will be not optimal even terrible. Therefore these frameworks support modern GPUs to accelerate their computation. The most common programming interface for GPU programming is Nvidia CUDA. CUDA is a parallel computing platform and application programming interface model created by Nvidia. It allows software developers and software engineers to use a CUDA-enabled graphics processing unit for general purpose processing. CUDA enables these frameworks to interact with the GPU efficiently.
 
 ## Why GPU?
-Neural networks are very computationally intensive computer models. The more complex the network, the more computation is required. The CPU is not designed for this kind of computation. The GPU is designed better suited for this kind of operation as it is a parallel processor. It can perform the same operation on multiple data points at the same time. The CPU is a serial processor and can therefore only perform one operation at a time.
+Neural networks are very computationally intensive computer models. The more complex a network, the more computation is required. A CPU is not designed for this kind of intense parallel computation. A GPU on the other hand is a lot better suited for these heavy parallel operations as its an parallel processor.
 
 Based on: https://www.weka.io/blog/cpu-vs-gpu/
 
-This is why GPUs are better suited for neural networks. This finding can also be shown in the visualization bellow. In the visualization bellow a neural network is trained to mnist dataset. The mnist dataset is a dataset of handwritten digits. The neural networks is trained to recognize the digits. The visualization shows the time it takes to train the neural network on a CPU and a GPU. The GPU is clearly faster than the CPU.
+This is why GPUs are better suited for neural networks. This finding can also be shown in the visualization bellow. In the visualization bellow a neural network is trained on the mnist dataset. The mnist dataset is a dataset of handwritten digits. The neural networks is trained to recognize the digits. The visualization shows the time it takes to train the neural network on a CPU and a GPU. The GPU is clearly faster than the CPU.
 
 Based on: http://yann.lecun.com/exdb/mnist/
 
 ![Performance Comparision](../../Documentation/CPUvsGPU.png)
 
-The above case is a very simple neural network. The more complex the neural network, the more computation is required. Furthermore within this project we are also working with a video stream. This means that the neural network has to be executed multiple times per second. This requirements lead to the conclusion that a GPU is required to improve the performance of the neural network.
+The above case is a very simple neural network. The more complex the neural network, the more computation is required. Furthermore within this project we are also working with a video stream. This means that the neural network has to be executed multiple times per second. This requirement leads to the conclusion that a GPU is required to improve the performance of the neural network.
 
 Based on the findings of the following [Jupyter Notebook](../GPU_CPU_Comparision.ipynb)
 
@@ -33,7 +31,7 @@ The following conda packages must be used, exactly matching the version mentione
 The installation can be either done via the following conda command or by the provided virtual environment.
 
 ```bash
-conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+conda install -c conda-forge cudatoolkit=11.6 cudnn=8.4.1
 python3 -m pip install tensorflow
 
 # Verify install:
@@ -107,8 +105,8 @@ The `nvcc` CUDA compiler-driver tool is installed with the CUDA toolkit, will al
 ### Changing CUDA Version
 In this project you are required to switch between CUDA versions 11.6 and 11.2. This can be done by changing the CUDA_HOME environment variable. The CUDA_HOME environment variable is used by the CUDA compiler driver (nvcc) to locate the CUDA Toolkit installation. The CUDA_HOME environment variable is also used by the CUDA runtime to locate the CUDA Toolkit installation. Initially the CUDA_HOME environment variable is set by the CUDA Toolkit installer.
 
-## Step 0: Check CUDA Version
-Check what version of CUDA you have. You can enter this to any command prompt (cmd, anaconda, etc)
+#### Step 0: Check CUDA Version
+Check what version of CUDA you have by using the following command.
 ```bash
 nvcc --version
 ```
@@ -116,20 +114,23 @@ nvcc --version
 Output should look something like this:
 ![image](../../Documentation/NVCC-Version.png)
 
-Then it means you have CUDA installed. And in my case, it's CUDA 11.6. I will be swapping to CUDA 11.3 in the following steps.
+Then it means you have CUDA installed.
 
-## Step 1: Change System Variables
+#### Step 1: Change System Variables
 Open the system variables by searching for "environment variables" in the windows search bar. Then click "Environment Variables" button and you should be able to see the user and system environment variables.
 
 Check if the env variable `CUDA_PATH` already exists, otherwise create a new variable.
 
-Change the content of the variable to the CUDA installation path. In this case, it's `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6`.
+Change the path of the `CUDA_PATH` to point to the CUDA installation folder of the version you want to switch to.
+In this case, it's `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2`.
 
-## Step 3: Change System Paths
-Ensure that within the PATH environment variable the selected CUDA version is the first entry. In this case, it's `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\[bin, libnvvp]`.
+#### Step 3: Change System Paths
+Ensure that within the PATH environment variable the selected CUDA version is the first entry. In this case, it's `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\[bin, libnvvp]`.
 
-## Step 3: Check if succeed
+#### Step 3: Check if succeed
 Close all command prompt and open a new one. Then check the CUDA version again by entering the following command:
 ```bash
 nvcc --version
 ```
+
+The version should now be switched to the version you have selected within the ENV variables.

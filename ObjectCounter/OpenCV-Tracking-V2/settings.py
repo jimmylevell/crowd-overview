@@ -12,3 +12,6 @@ def init():
 
     global euclidean_dist_threshold
     euclidean_dist_threshold = 25
+
+    global min_area
+    min_area = 100

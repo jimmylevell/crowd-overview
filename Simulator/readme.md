@@ -1,8 +1,8 @@
 # Simulator
 ## Why
-Creating artifical data has many advantages compared to traditional and time intensive data collection processes or field tests. This advantage decreases the resources required to test hyptohsis as data has not to be manually collected and labeld. At first syntetic data does not infringe privacy as it does not include personally identifiable information. As the data is created based on parameters the developers of such datasets can ensure that it is balanced with respect to age, gender, race, culture, etc. This allows to address the important topic of removing biases from computer models.
+Creating artificial data has many advantages compared to traditional and time intensive data collection processes or field tests. This advantage decreases the resources required to test hypothesis as data has not to be manually collected and labeled. At first synthetic data does not infringe privacy as it does not include personally identifiable information. Furthermore, the data is created based on parameters the developers of such datasets can ensure that it is balanced with respect to age, gender, race, culture, etc. This allows to support the important topic of removing biases from computer models.
 
-Syntic datasets can be used to create unlimited amount of data and can therefore be easily integrated in existing training and testing data pipelines. This allows to train and test models on a larger amount of data and to test them on a larger variety of scenarios.
+Synthetic datasets can be used to create unlimited amount of data and can therefore be easily integrated in existing training and testing data pipelines. This allows to train and test models on a larger amount of data and to test them on a larger variety of scenarios.
 
 Lastly the dataset can simulate “black swan” events that are rare but significant for the computer model to be trained on (e.g. car crashes). This allows to test the models robustness and to ensure that it can handle rare events.
 
@@ -26,7 +26,7 @@ Based on [2]
 American Express trained an AI model to prevent fraud. The model was trained on synthetic data. For the data generation process GANs have been used as not enough real world data was available. The goal was to augment the real data set with synthesized data in order to balance the availability of different fraud variations. The process used by American Express did not include any personal data and therefore did not infringe privacy.
 
 ### [Mobiliar](https://f.hubspotusercontent10.net/hubfs/3832818/Resources/case_studies/CS_Mobiliere_x_Statice.pdf?hsCtaTracking=de21e86a-a06f-4e3a-b218-015159730149%257C471d7f33-9783-4c15-9607-b2c6fc0ecb3a)
-Swiss insurance company La Mobilière used synthetic data to train the churn model. Churn prediction is one of the common machine learning tasks used to identify and forecast customers who are likely to stop using the service. Effective churn prediction gives business time and information to proactively contact customers with better deals to make them stay.
+Swiss insurance company La Mobilière used synthetic data to train their churn model. Churn prediction is one of the common machine learning tasks used to identify and forecast customers who are likely to stop using the service. Effective churn prediction gives business time and information to proactively contact customers with better deals to make them stay.
 
 The main problem the company solved with synthetic data was privacy issues. From 2017, new compliance for private data usage in Switzerland started to be established, and so it was complicated and expensive to actually base models on real data. With synthetic tabular data, La Mobilière was able to obtain data for compliance model training.
 
@@ -38,7 +38,7 @@ Virtual factory space for robot navigation and production simulation for BMW was
 Based on [2]
 
 ## How it works
-Using the [Traffic3D](https://traffic3d.org/) which is a traffic simulation program built on top of Unity. Traffic3D should allow us to stress test the developed prototype in an artifical environment, without the requirement of expensive and exhaustive field tests. The program is capable of simulating traffic in a 3D environment, with the ability to add vehicles, pedestrians, and other objects. The program also allows for the creation of custom scenarios, which can be used to test the developed prototype.
+Using the [Traffic3D](https://traffic3d.org/) which is a traffic simulation program built on top of Unity. Traffic3D should allow us to stress test the developed prototype in an artificial environment, without the requirement of expensive and exhaustive field tests. The program is capable of simulating traffic in a 3D environment, with the ability to add vehicles, pedestrians, and other objects. The program also allows for the creation of custom scenarios, which can be used to test the developed prototype.
 
 ## Design
 

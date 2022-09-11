@@ -154,5 +154,8 @@ Based on [Multiple Object Trackers in OpenCV: A Benchmark](https://www.semantics
 
 ## References
 [1] https://livecodestream.dev/post/object-tracking-with-opencv/#:~:text=Object%20tracking%20using%20OpenCV%20is,CSRT%2C%20GOTURN%2C%20and%20MediandFlow
+
 [2] https://broutonlab.com/blog/opencv-object-tracking
+
 [3] https://learnopencv.com/object-tracking-using-opencv-cpp-python/
+
