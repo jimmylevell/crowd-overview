@@ -1,11 +1,15 @@
 import threading
 import settings
+import requests
+import traceback
 
 class ConsumerThread(threading.Thread):
     def __init__(self):
         super(ConsumerThread, self).__init__()
 
         self.objects_detected = 0
+
+        self.header = {'Authorization': 'Bearer ' + settings.auth_token}
 
     def run(self):
         global queue
@@ -33,3 +37,14 @@ class ConsumerThread(threading.Thread):
                     self.objects_detected += 1
 
                     print("Info: Object {} detected.".format(obj.id))
+                    self.post_data(id=obj.id, object_class=obj.class_id, confidence_score=obj.score, direction=obj.direction, measured_at=obj.measured_at)
+
+    def post_data(self, id, object_class, confidence_score, direction, measured_at):
+        data = {'measurements' : [
+            { "object_class": str(object_class), "confidence_score": str(confidence_score), "direction": str(direction), "measured_at": str(measured_at) }
+        ]}
+
+        try:
+            requests.post(settings.backend_url + "/" + settings.checkpoint_id, json=data, headers=self.header)
+        except Exception:
+            traceback.print_exc()

@@ -51,7 +51,7 @@ export default function MeasurementsModal(props) {
                   <td>{measurement.object_class}</td>
                   <td>{measurement.confidence_score}</td>
                   <td>{measurement.direction}</td>
-                  <td>{measurement.measured_at}</td>
+                  <td>{measurement.measured_at?.replace("T", " ").replace(".000Z", "")}</td>
               </tr>
               )
               )}

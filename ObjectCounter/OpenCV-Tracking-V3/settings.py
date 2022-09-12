@@ -21,3 +21,12 @@ def init():
 
     global repetitions_threshold
     repetitions_threshold = 5
+
+    global auth_token
+    auth_token = 'api-token'
+
+    global backend_url
+    backend_url = 'http://localhost:3000/api/checkpoint/measurement/'
+
+    global checkpoint_id
+    checkpoint_id = "6305f6ad20343083bfa7debd"

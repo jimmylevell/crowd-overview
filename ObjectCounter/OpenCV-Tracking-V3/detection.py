@@ -1,5 +1,7 @@
 import math
 
+from datetime import datetime
+
 class Detection:
     def __init__(self, class_id, score, box):
         self.class_id = class_id
@@ -16,6 +18,8 @@ class Detection:
         self.detections = 0
 
         self.matched = False
+
+        self.measured_at = datetime.now().strftime("%d.%m.%Y, %H:%M:%S")
 
     def __str__(self):
         return "Object ID: {}, Class ID: {}, Score: {}, Direction: {}, Detections: {}".format(self.id, self.class_id, format(self.score,".2f"), format(self.direction,".2f"), self.detections)
