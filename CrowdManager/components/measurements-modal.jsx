@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import Pusher from 'pusher-js';
 
+
 export default function MeasurementsModal(props) {
   const [measurements, setMeasurements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [checkpoint, setCheckpoint] = useState();
 
   useEffect(() => {
-    const pusher = new Pusher('0177fb2397ec95132111', {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_AUTH_PUSHER_APP_KEY, {
       cluster: 'eu'
     });
 

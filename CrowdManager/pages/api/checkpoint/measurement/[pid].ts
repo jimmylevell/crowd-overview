@@ -7,9 +7,9 @@ import logger from "../../../../services/logger"
 import { authOptions } from "../../auth/[...nextauth]"
 
 const pusher = new Pusher({
-  appId: "1476056",
-  key: "0177fb2397ec95132111",
-  secret: "c9cf7715c818b232f2e9",
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_APP_KEY,
+  secret: process.env.PUSHER_APP_SECRET,
   cluster: "eu",
   useTLS: true
 });
