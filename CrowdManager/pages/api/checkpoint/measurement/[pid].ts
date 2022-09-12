@@ -46,8 +46,8 @@ const handler = async (req, res) => {
         logger.info('Measurements uploaded successfully')
         res.status(200).json({ response: 'success', measurements: measurements })
 
-        pusher.trigger("measurement", "new_measurement", {
-          measurements: await getMeasurementsByCheckpointId(checkpoint._id)
+        pusher.trigger("measurement", "new_measurement_" + checkpoint._id , {
+          measurements: measurements
         });
       }
       catch (ex) {
