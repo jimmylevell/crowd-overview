@@ -69,12 +69,21 @@ The [main.ipynb](./main.ipynb) file is the entry point for the application. It i
 - video_file_path: The path to the video file. This parameter is only used if `use_video_file` is set to true.
 - roi_selection: If set to true the user will be asked to select the region of interest. If set to false the region of interest will be set to the whole image.
 
-Within the producer the two components `EuclidianDistTracker` and `cv2` are initialized. CV2 loads the video file or the webcam and detects the objects using the described method above. The `EuclidianDistTracker` is used to track then further the objects in the subsequent frames.
+Within the producer the two components `EuclidianDistTracker` and `cv2` are initialized. If required the user is prompted to define the region of interest. CV2 loads the video file or the webcam and executes the following steps
+1) apply the region of interest on the frame
+2) detects the objects using the described method above
+
+The `EuclidianDistTracker` receives the detections per frame. It then uses the method described above to determine if the object is the same as the previous frame. If the object is the same the bounding box is updated. If the object is not the same a new bounding box is created. The ***tracked*** objects are then displayed on the screen.
 
 ## Results
 ![OpenCV2 Result](../../Documentation/OpenCV1.gif)
 
 ## Evaluation
+
+## Conclusion
+Based on the above evaluation the following conclusions can be drawn:
+- limited approach
+- object classses can not be determined
 
 ## References
 [1] https://pysource.com/2021/01/28/object-tracking-with-opencv-and-python/

@@ -152,6 +152,13 @@ Therefore it can be concluded that CSRT is the best algorithm for tracking objec
 
 Based on [Multiple Object Trackers in OpenCV: A Benchmark](https://www.semanticscholar.org/reader/9c1403b61d58b98e4d1b176014fade7b2d529387)
 
+## Conclusion
+Based on the above evaluation the following conclusions can be drawn:
+- limited approach
+- manual selection of the object to be tracked is required, therefore no object detection
+- object classses can not be determined
+- SOT approach is not suitable for real-time applications
+
 ## References
 [1] https://livecodestream.dev/post/object-tracking-with-opencv/#:~:text=Object%20tracking%20using%20OpenCV%20is,CSRT%2C%20GOTURN%2C%20and%20MediandFlow
 
