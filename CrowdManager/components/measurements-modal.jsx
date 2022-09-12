@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Pusher from 'pusher-js';
 import { useChannel, useEvent } from '@harelpls/use-pusher';
+import {CSVLink } from 'react-csv';
 
 export default function MeasurementsModal(props) {
   const [measurements, setMeasurements] = useState([]);
@@ -15,6 +15,8 @@ export default function MeasurementsModal(props) {
 
   useEffect(() => {
     if (props.checkpoint) {
+      setMeasurements([])
+      setLoading(true)
       setCheckpoint(props.checkpoint);
       fetch('/api/checkpoint/measurement/' + props.checkpoint._id)
         .then(res => res.json())
@@ -36,6 +38,12 @@ export default function MeasurementsModal(props) {
       <div className="modal-content rounded-4 shadow">
         <div className="modal-body p-8 text-center">
           <h5 className="mb-0">Measurement of Checkpoint <b>{checkpoint?.name}</b></h5>
+          <CSVLink
+            data={measurements}
+            filename={'measurement_' + checkpoint?.name +'.csv'}>
+              <i class="bi bi-filetype-csv"></i> Export Measurement
+          </CSVLink>
+
           <table className='table table-hover'>
           <thead>
               <tr>
