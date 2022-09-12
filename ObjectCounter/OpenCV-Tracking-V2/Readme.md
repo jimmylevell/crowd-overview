@@ -76,7 +76,7 @@ Within the producer the two components `EuclidianDistTracker` and `cv2` are init
 The `EuclidianDistTracker` receives the detections per frame. It then uses the method described above to determine if the object is the same as the previous frame. If the object is the same the bounding box is updated. If the object is not the same a new bounding box is created. The ***tracked*** objects are then displayed on the screen.
 
 ## Results
-![OpenCV2 Result](../../Documentation/OpenCV1.gif)
+![OpenCV2 Result](../../Documentation/OpenCV2.gif)
 
 ## Evaluation
 

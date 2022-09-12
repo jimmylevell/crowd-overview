@@ -19,4 +19,4 @@ else:
     print("CV2 GPU is NOT available")
     sys.exit(1)
 
-run(source=0)
+run(source="los_angeles.mp4", show_vid=True)
