@@ -24,6 +24,12 @@ The backend is developed using NextJS. As database mongodb will be used.
 ## Database Layout
 ![Database Layout](../Documentation/DataSchema.png)
 
+As additional sorting of the collection is required the following indexes within mongo db must be created:
+- On all collections the index `createdAt` must be created
+
+To add the index to the collection the Explore Data View within Azure Cosmos DB can be used. Within the Explorer the corresponding collection can be selected. View the tab "Scale & Settings" the index can be added.
+- createdAt: single Field
+
 ## Development
 ### Visual Studio Code
 The project is developed using Visual Studio Code. For the development a dev container is available. This container contains all the necessary tools to develop the application. The container is based on the official node image.
@@ -48,6 +54,24 @@ To control the application behavior the following environment variables are avai
 Using the following docker command a local mongo DB instance can be instantiated.
 
     docker run -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 --name crowdmanager-mongo -d --restart always mongo
+
+## Example POST Query
+Using the following code snippet measurement points can be added.
+
+```powershell
+$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+$headers.Add("Content-Type", "application/json")
+$headers.Add("Authorization", "Bearer TOKEN")
+
+$body = "{
+`n    `"measurements`": [
+`n        { `"object_class`": 0, `"confidence_score`": 23.7, `"direction`": `"`", `"measured_at`": `"2022-09-11T20:16:17.259Z`"}
+`n    ]
+`n}"
+
+$response = Invoke-RestMethod 'https://crowdmanager.app.levell.ch/api/checkpoint/measurement/6305f6ad20343083bfa7debd' -Method 'POST' -Headers $headers -Body $body
+$response | ConvertTo-Json
+```
 
 ### Available Scripts - nextjs
 In the project directory, you can run:

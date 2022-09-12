@@ -63,6 +63,14 @@ if area > settings.min_area:
 ### Tracking
 The tracker keeps track of all the objects that are detected. It uses the Euclidian Distance between the centroids of the bounding boxes to determine if the object is the same as the previous frame. If the distance is below a certain threshold the object is considered the same. If the distance is above the threshold the object is considered a new object.
 
+## Usage
+The [main.ipynb](./main.ipynb) file is the entry point for the application. It initializes the producer which is the encapsulates the detection and tracking logic. By executing the run method the detection and tracking will start. The run method has the following parameters:
+- use_video_file: If set to true the video file will be used as input. If set to false the webcam will be used as input.
+- video_file_path: The path to the video file. This parameter is only used if `use_video_file` is set to true.
+- roi_selection: If set to true the user will be asked to select the region of interest. If set to false the region of interest will be set to the whole image.
+
+Within the producer the two components `EuclidianDistTracker` and `cv2` are initialized. CV2 loads the video file or the webcam and detects the objects using the described method above. The `EuclidianDistTracker` is used to track then further the objects in the subsequent frames.
+
 ## Results
 ![OpenCV2 Result](../../Documentation/OpenCV1.gif)
 
