@@ -7,6 +7,7 @@ export default function Checkpoint({
   return (
     <div className="card mb-2">
       <div className="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">{checkpoint._id}</h6>
         <h5 className="card-title">{checkpoint.name}</h5>
 
         <button

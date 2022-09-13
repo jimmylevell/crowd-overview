@@ -61,10 +61,14 @@ class ConsumerThread(threading.Thread):
         }
 
         try:
-            requests.post(
+            response = requests.post(
                 settings.backend_url + "/" + settings.checkpoint_id,
                 json=data,
                 headers=self.header,
             )
+
+            if response.status_code != 200:
+                print("Error: {}".format(response.text))
+                raise Exception("Error: {}".format(response.text))
         except Exception:
             traceback.print_exc()

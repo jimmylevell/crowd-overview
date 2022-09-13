@@ -63,9 +63,11 @@ export default function MeasurementsModal(props) {
                       <td>{measurement.confidence_score}</td>
                       <td>{measurement.direction}</td>
                       <td>
-                        {measurement.measured_at
-                          ?.replace('T', ' ')
-                          .replace('.000Z', '')}
+                        {
+                          measurement.measured_at
+                            ?.replace('T', ' ')
+                            .split('.')[0]
+                        }
                       </td>
                     </tr>
                   ))

@@ -42,7 +42,7 @@ export async function createMeasurements(checkpoint, measurements) {
       checkpoint_id: checkpoint._id,
       confidence_score: measurement.confidence_score,
       direction: measurement.direction,
-      measured_at: measurement.measured_at,
+      measured_at: Date.parse(measurement.measured_at),
     }
   })
 

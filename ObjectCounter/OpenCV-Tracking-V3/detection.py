@@ -20,7 +20,7 @@ class Detection:
 
         self.matched = False
 
-        self.measured_at = datetime.now().strftime("%d.%m.%Y, %H:%M:%S")
+        self.measured_at = datetime.now().isoformat()
 
     def __str__(self):
         return "Object ID: {}, Class ID: {}, Score: {}, Direction: {}, Detections: {}".format(
