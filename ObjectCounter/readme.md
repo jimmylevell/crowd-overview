@@ -151,6 +151,12 @@ For this project, we will be using virtual environments. This is a tool that hel
 
 ### Test Data Sets
 
+### Formatting
+
+https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter
+
+As formatting guideline black is used.
+
 ## Performance Overview
 ### Object Detection
 
