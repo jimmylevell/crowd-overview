@@ -30,6 +30,16 @@ export default function Checkpoint({
           <i className="bi bi-file-earmark-text"></i> View Log
         </button>
 
+        <button
+          type="button"
+          className="btn btn-primary m-1"
+          onClick={onMeasurement}
+          data-bs-toggle="modal"
+          data-bs-target="#aggregationsmodal"
+        >
+          <i class="bi bi-bar-chart-line"></i> View Aggregations
+        </button>
+
         <button type="button" className="btn btn-danger m-1" onClick={onDelete}>
           <i className="bi bi-trash"></i> Delete
         </button>

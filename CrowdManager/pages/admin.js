@@ -6,6 +6,7 @@ import Checkpoint from '../components/checkpoint'
 import CheckpointEditor from '../components/checkpoint-editor'
 import ToastNotification from '../components/toastnotification'
 import MeasurementsModal from '../components/measurements-modal'
+import AggregationsModal from '../components/aggregations-modal'
 const Graph = dynamic(() => import('../components/graph'), {
   ssr: false,
 })
@@ -109,6 +110,7 @@ export default function Admin() {
           />
 
           <MeasurementsModal checkpoint={checkpointSelected} />
+          <AggregationsModal checkpoint={checkpointSelected} />
 
           {loading && <div>Loading...</div>}
 
