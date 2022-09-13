@@ -32,6 +32,13 @@ Obtains higher accuracy with the use of
 ![OpenCV Tracking v4](../../Documentation/OpenCV4.gif)
 
 ## Evaluation
+Time required to align video from: 0.00600123405456543
+Time required to predict: 0.8869986534118652
+Time required to encode: 0.9668455123901367
+Time required to run non maxima suppression: 0.9688470363616943
+Time required for tracker to update: 0.97287917137146
+Time required to draw results for each track: 0.9748461246490479
+Time required to align video from: 0.005998849868774414
 
 ## Conclusion
 
