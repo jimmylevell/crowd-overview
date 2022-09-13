@@ -1,5 +1,5 @@
-import NextAuth, { NextAuthOptions } from "next-auth"
-import AzureADProvider from "next-auth/providers/azure-ad";
+import NextAuth, { NextAuthOptions } from 'next-auth'
+import AzureADProvider from 'next-auth/providers/azure-ad'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,10 +10,10 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt"
+    strategy: 'jwt',
   },
   theme: {
-    colorScheme: "dark",
+    colorScheme: 'dark',
   },
 }
 

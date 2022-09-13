@@ -1,4 +1,9 @@
-export default function Checkpoint({ onDelete, onEdit, onMeasurement, checkpoint }) {
+export default function Checkpoint({
+  onDelete,
+  onEdit,
+  onMeasurement,
+  checkpoint,
+}) {
   return (
     <div className="card mb-2">
       <div className="card-body">
@@ -24,11 +29,7 @@ export default function Checkpoint({ onDelete, onEdit, onMeasurement, checkpoint
           <i className="bi bi-file-earmark-text"></i> View Log
         </button>
 
-        <button
-          type="button"
-          className="btn btn-danger m-1"
-          onClick={onDelete}
-        >
+        <button type="button" className="btn btn-danger m-1" onClick={onDelete}>
           <i className="bi bi-trash"></i> Delete
         </button>
       </div>

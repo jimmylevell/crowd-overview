@@ -1,10 +1,10 @@
-import { SessionProvider, useSession } from "next-auth/react"
-import { useEffect } from "react";
+import { SessionProvider, useSession } from 'next-auth/react'
+import { useEffect } from 'react'
 import { PusherProvider } from '@harelpls/use-pusher'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import "./style.css"
+import './style.css'
 
 const config = {
   clientKey: process.env.NEXT_PUBLIC_AUTH_PUSHER_APP_KEY,
@@ -18,7 +18,10 @@ export default function App({
   useEffect(() => {
     // make bootstrap js available to the app
     // @ts-ignore
-    typeof document !== undefined ? require("bootstrap/dist/js/bootstrap") : null; },[]);
+    typeof document !== undefined
+      ? require('bootstrap/dist/js/bootstrap')
+      : null
+  }, [])
 
   return (
     <PusherProvider {...config}>
@@ -38,7 +41,7 @@ export default function App({
 function Auth({ children }) {
   const { status } = useSession({ required: true })
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return <div>Loading...</div>
   }
 

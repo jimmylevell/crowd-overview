@@ -5,19 +5,19 @@ services:
       target: crowdmanager-dev
       context: .
       dockerfile: Dockerfile
-    user: "${UID:-0}:${GID:-0}"
+    user: '${UID:-0}:${GID:-0}'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     restart: always
     environment:
       - NODE_ENV=development
     volumes:
-      - ".:/app"
+      - '.:/app'
 
   db:
     image: mongo:latest
     ports:
-      - "27017:27017"
+      - '27017:27017'
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
@@ -25,4 +25,3 @@ services:
       MONGO_INITDB_DATABASE: crowdmanager
     depends_on:
       - crowdmanager
-

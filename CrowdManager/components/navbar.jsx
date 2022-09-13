@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 import LoginButton from '../components/loginButton'
 
 export default function NavBar() {
@@ -6,10 +6,20 @@ export default function NavBar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
         <Link href="/">
-          <a className="navbar-brand" aria-current="page">Crowd Manager</a>
+          <a className="navbar-brand" aria-current="page">
+            Crowd Manager
+          </a>
         </Link>
 
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
 
@@ -17,7 +27,9 @@ export default function NavBar() {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link href="/admin">
-                <a className="nav-link active" aria-current="page">Admin</a>
+                <a className="nav-link active" aria-current="page">
+                  Admin
+                </a>
               </Link>
             </li>
             <LoginButton />
