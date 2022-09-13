@@ -31,7 +31,7 @@ const handler = async (req, res) => {
           .status(401)
           .json({ response: 'error', message: 'Not signed in' })
 
-      let measurements = await getMeasurementsByCheckpointId(checkpoint_id)
+      const measurements = await getMeasurementsByCheckpointId(checkpoint_id)
       logger.info('Measurements retrieved')
       res.status(200).json({ response: 'success', measurements: measurements })
     } catch (ex) {
@@ -45,12 +45,10 @@ const handler = async (req, res) => {
       // for creating measurments must be authenticated using token
       const checkpoint = await getCheckpointByAPIKey(token)
       if (!checkpoint)
-        return res
-          .status(401)
-          .json({
-            response: 'error',
-            message: 'Not authenticated, please provide API key',
-          })
+        return res.status(401).json({
+          response: 'error',
+          message: 'Not authenticated, please provide API key',
+        })
 
       measurements = await createMeasurements(checkpoint, req.body.measurements)
       logger.info('Measurements uploaded successfully')

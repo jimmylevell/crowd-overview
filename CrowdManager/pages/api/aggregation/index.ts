@@ -12,7 +12,7 @@ const handler = async (req, res) => {
 
   if (req.method === 'GET') {
     try {
-      let aggreations = await getAggregations()
+      const aggreations = await getAggregations()
       logger.info('Logs retrieved')
       res.status(200).json({ response: 'success', aggreations: aggreations })
     } catch (ex) {

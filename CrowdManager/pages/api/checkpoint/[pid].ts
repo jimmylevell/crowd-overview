@@ -19,50 +19,44 @@ const handler = async (req, res) => {
   const put = async (checkpoint: ICheckpoint) => {
     if (checkpoint) {
       try {
-        let new_checkpoint = await updateCheckpoint(checkpoint)
+        const new_checkpoint = await updateCheckpoint(checkpoint)
         logger.info('Checkpoint updated')
         res
           .status(200)
           .json({ response: 'success', checkpoint: new_checkpoint })
       } catch (ex) {
         logger.error(ex)
-        res
-          .status(500)
-          .json({
-            response: 'error',
-            message: 'General application error',
-            checkpoint: '',
-          })
+        res.status(500).json({
+          response: 'error',
+          message: 'General application error',
+          checkpoint: '',
+        })
       }
     } else {
       logger.error('Checkpoint body not provided')
-      res
-        .status(500)
-        .json({
-          response: 'error',
-          message: 'Body not provided',
-          checkpoint: '',
-        })
+      res.status(500).json({
+        response: 'error',
+        message: 'Body not provided',
+        checkpoint: '',
+      })
     }
   }
 
   const delete_method = async (id: string) => {
     if (id) {
       try {
-        let new_checkpoint = await deleteCheckpoint(id)
+        const new_checkpoint = await deleteCheckpoint(id)
         logger.info('Checkpoint removed')
         res
           .status(200)
           .json({ response: 'success', checkpoint: new_checkpoint })
       } catch (ex) {
         logger.error(ex)
-        res
-          .status(500)
-          .json({
-            response: 'error',
-            message: 'General application error',
-            checkpoint: '',
-          })
+        res.status(500).json({
+          response: 'error',
+          message: 'General application error',
+          checkpoint: '',
+        })
       }
     } else {
       logger.error('Checkpoint id not provided')

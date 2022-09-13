@@ -17,7 +17,7 @@ const handler = async (req, res) => {
 
   const get = async () => {
     try {
-      let checkpoints = await getCheckpoints()
+      const checkpoints = await getCheckpoints()
       logger.info('Checkpoints retrieved')
       res.status(200).json({ response: 'success', checkpoints: checkpoints })
     } catch (ex) {
@@ -29,30 +29,26 @@ const handler = async (req, res) => {
   const post = async (checkpoint: ICheckpoint) => {
     if (checkpoint) {
       try {
-        let new_checkpoint = await createCheckpoint(checkpoint)
+        const new_checkpoint = await createCheckpoint(checkpoint)
         logger.info('Checkpoint created')
         res
           .status(200)
           .json({ response: 'success', checkpoint: new_checkpoint })
       } catch (ex) {
         logger.error(ex)
-        res
-          .status(500)
-          .json({
-            response: 'error',
-            message: 'General application error',
-            checkpoint: '',
-          })
+        res.status(500).json({
+          response: 'error',
+          message: 'General application error',
+          checkpoint: '',
+        })
       }
     } else {
       logger.error('No checkpoint body provided')
-      res
-        .status(500)
-        .json({
-          response: 'error',
-          message: 'Body not provided',
-          checkpoint: '',
-        })
+      res.status(500).json({
+        response: 'error',
+        message: 'Body not provided',
+        checkpoint: '',
+      })
     }
   }
 

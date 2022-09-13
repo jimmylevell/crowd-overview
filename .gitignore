@@ -1,5 +1,6 @@
 __pycache__
 .ipynb_checkpoints
+tsconfig.tsbuildinfo
 
 # yolo weights
 yolov4.weights
