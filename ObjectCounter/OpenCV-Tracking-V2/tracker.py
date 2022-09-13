@@ -3,6 +3,7 @@ import settings
 
 settings.init()
 
+
 class EuclideanDistTracker:
     def __init__(self):
         # Store the center positions of the objects
@@ -58,7 +59,7 @@ class EuclideanDistTracker:
         # Clean the dictionary by center points to remove IDS not used anymore
         new_center_points = {}
         for obj_bb_id in objects_bbs_ids:
-            _, _, _, _, object_id ,_ = obj_bb_id
+            _, _, _, _, object_id, _ = obj_bb_id
             center = self.center_points[object_id]
             new_center_points[object_id] = center
 

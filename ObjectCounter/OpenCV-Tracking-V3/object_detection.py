@@ -6,8 +6,11 @@ from detection import Detection
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
+
 class ObjectDetection:
-    def __init__(self, weights_path="dnn_model\yolov4.weights", cfg_path="dnn_model\yolov4.cfg"):
+    def __init__(
+        self, weights_path="dnn_model\yolov4.weights", cfg_path="dnn_model\yolov4.cfg"
+    ):
         weights_path = os.path.join(BASE_DIR, weights_path)
         cfg_path = os.path.join(BASE_DIR, cfg_path)
 
@@ -29,7 +32,9 @@ class ObjectDetection:
         self.load_class_names()
         self.colors = np.random.uniform(0, 255, size=(80, 3))
 
-        self.model.setInputParams(size=(self.image_size, self.image_size), scale=1/255)
+        self.model.setInputParams(
+            size=(self.image_size, self.image_size), scale=1 / 255
+        )
 
     def load_class_names(self, classes_path="dnn_model\classes.txt"):
         classes_path = os.path.join(BASE_DIR, classes_path)
@@ -42,7 +47,9 @@ class ObjectDetection:
         return self.classes
 
     def detect(self, frame):
-        (class_ids, scores, boxes) = self.model.detect(frame, nmsThreshold=self.nmsThreshold, confThreshold=self.confThreshold)
+        (class_ids, scores, boxes) = self.model.detect(
+            frame, nmsThreshold=self.nmsThreshold, confThreshold=self.confThreshold
+        )
 
         # create detection objects
         detections = []

@@ -1,5 +1,6 @@
 import threading
 
+
 def init():
     global history
     history = 100

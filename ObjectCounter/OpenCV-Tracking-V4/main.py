@@ -24,7 +24,14 @@ download_weights()
 
 # check if weights have been converted
 from convert import convert
-convert()
-convert(tiny=True, weights="weights/yolov3-tiny.weights", output="weights/yolov3-tiny.tf")
 
-run(use_video_file=True, video_file_path="data/video/los_angeles.mp4", roi_selection=True)
+convert()
+convert(
+    tiny=True, weights="weights/yolov3-tiny.weights", output="weights/yolov3-tiny.tf"
+)
+
+run(
+    use_video_file=True,
+    video_file_path="data/video/los_angeles.mp4",
+    roi_selection=True,
+)

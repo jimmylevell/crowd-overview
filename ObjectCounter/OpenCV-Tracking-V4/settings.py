@@ -1,5 +1,6 @@
 import threading
 
+
 def init():
     global queue
     queue = []
@@ -29,7 +30,7 @@ def init():
     output_video = False
 
     global input_size
-    input_size = 416 # 288
+    input_size = 416  # 288
 
     global tiny
     tiny = False

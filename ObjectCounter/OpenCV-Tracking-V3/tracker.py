@@ -5,6 +5,7 @@ from detection import Detection
 
 settings.init()
 
+
 class EuclideanDistTracker:
     def __init__(self):
         self.detections = {}
@@ -36,7 +37,9 @@ class EuclideanDistTracker:
             self.detections[new_detection.id] = new_detection
 
     def remove_old_detections(self):
-        unmatched_detections = [detection for detection in self.detections.values() if not detection.matched]
+        unmatched_detections = [
+            detection for detection in self.detections.values() if not detection.matched
+        ]
         for unmatched_detection in unmatched_detections:
             del self.detections[unmatched_detection.id]
 
@@ -48,7 +51,9 @@ class EuclideanDistTracker:
 
         for new_detection in new_detections:
             for detection in self.detections.values():
-                distance = detection.get_distance(new_detection.get_cx(), new_detection.get_cy())
+                distance = detection.get_distance(
+                    new_detection.get_cx(), new_detection.get_cy()
+                )
 
                 if distance < settings.max_distance:
                     detection.x = new_detection.x

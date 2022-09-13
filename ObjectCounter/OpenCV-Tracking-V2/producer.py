@@ -3,6 +3,7 @@ import sys
 import settings
 from tracker import EuclideanDistTracker
 
+
 def get_region_of_interest_selection(frame):
     # Extract Region of interest ROI
     roi_coordinates = cv2.selectROI(frame, False)
@@ -10,7 +11,14 @@ def get_region_of_interest_selection(frame):
     print("Region of interest: ", roi_coordinates)
     return roi_coordinates
 
-def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="los_angeles.mp4", roi_selection=True):
+
+def run(
+    use_web_cam=False,
+    cam_index=0,
+    use_video_file=False,
+    video_file_path="los_angeles.mp4",
+    roi_selection=True,
+):
     # Create tracker object
     tracker = EuclideanDistTracker()
 
@@ -25,7 +33,7 @@ def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="l
     # Read first frame
     ok, frame = cap.read()
     if not ok:
-        print ('Cannot read video file')
+        print("Cannot read video file")
         sys.exit()
 
     # Extract Region of interest ROI
@@ -38,15 +46,29 @@ def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="l
     # Object detection from Stable camera, extract the moving objects from the stable camera¨
     # the longer the history the more stable the object detection is
     # the higher the value less detection, but also less false positives
-    object_detector = cv2.createBackgroundSubtractorMOG2(history=settings.history, varThreshold=settings.varThreshold)
+    object_detector = cv2.createBackgroundSubtractorMOG2(
+        history=settings.history, varThreshold=settings.varThreshold
+    )
 
     while True:
         ret, frame = cap.read()
         height, width, _ = frame.shape
 
         # 1. Object Detection
-        roi = frame[int(roi_coordinates[1]):int(roi_coordinates[1] + roi_coordinates[3]), int(roi_coordinates[0]):int(roi_coordinates[0] + roi_coordinates[2])]
-        cv2.rectangle(frame, (roi_coordinates[0], roi_coordinates[1]), (roi_coordinates[0] + roi_coordinates[2], roi_coordinates[1] + roi_coordinates[3]), (255, 0, 0), 2)
+        roi = frame[
+            int(roi_coordinates[1]) : int(roi_coordinates[1] + roi_coordinates[3]),
+            int(roi_coordinates[0]) : int(roi_coordinates[0] + roi_coordinates[2]),
+        ]
+        cv2.rectangle(
+            frame,
+            (roi_coordinates[0], roi_coordinates[1]),
+            (
+                roi_coordinates[0] + roi_coordinates[2],
+                roi_coordinates[1] + roi_coordinates[3],
+            ),
+            (255, 0, 0),
+            2,
+        )
         mask = object_detector.apply(roi)
 
         # remove noise from the mask
@@ -68,7 +90,15 @@ def run(use_web_cam=False, cam_index=0, use_video_file=False, video_file_path="l
         boxes_ids = tracker.update(detections)
         for box_id in boxes_ids:
             x, y, w, h, id, direction = box_id
-            cv2.putText(roi, str(id) + " " + format(direction,".2f"), (x, y - 15), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
+            cv2.putText(
+                roi,
+                str(id) + " " + format(direction, ".2f"),
+                (x, y - 15),
+                cv2.FONT_HERSHEY_PLAIN,
+                2,
+                (255, 0, 0),
+                2,
+            )
             cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
         cv2.imshow("roi", roi)

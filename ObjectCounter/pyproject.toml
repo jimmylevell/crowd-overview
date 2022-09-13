@@ -1,0 +1,25 @@
+[tool.black]
+line-length = 88
+target-version = ['py36', 'py37', 'py38']
+include = '\.pyi?$'
+exclude = '''
+/(
+  \.toml
+  |\.sh
+  |\.git
+  |\.ini
+  |dnn_model
+  |runs
+  |val_utils
+  |data
+  |deep_sort
+  |model_data
+  |tools
+  |weights
+  |yolov3_tf2
+  |strong_sort
+  |yolov5
+  |Dockerfile
+  |Jenkinfile
+)/
+'''
