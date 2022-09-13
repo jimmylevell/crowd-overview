@@ -1,6 +1,7 @@
 # Crowd Manager - Web Interface
 
 ## How it works
+
 Provides the possibility to manage the checkpoint and view the movement of the crowd based on the aggregated information.
 Furthermore the backend is used by the checkpoints to upload their measurements.
 
@@ -9,6 +10,7 @@ The application consists of a frontend written in react and a backend written in
 ![Crowd Manager](../Documentation/architecture.png)
 
 ## Design
+
 The website will be structured in an traditional frontend and backend architecture.
 ![Frontend Backend](../Documentation/FrontendBackend.png)
 
@@ -16,25 +18,33 @@ To simplifying the development and deployment of the application a CI/CD Pipelin
 ![CI/CD](../Documentation/CI_CD.png)
 
 ### Frontend
+
 React will be used as frontend framework. As CSS framework Bootstrap will be used.
 
 ### Backend
+
 The backend is developed using NextJS. As database mongodb will be used.
 
 ## Database Layout
+
 ![Database Layout](../Documentation/DataSchema.png)
 
 As additional sorting of the collection is required the following indexes within mongo db must be created:
+
 - On all collections the index `createdAt` must be created
 
 To add the index to the collection the Explore Data View within Azure Cosmos DB can be used. Within the Explorer the corresponding collection can be selected. View the tab "Scale & Settings" the index can be added.
+
 - createdAt: single Field
 
 ## Development
+
 ### Visual Studio Code
+
 The project is developed using Visual Studio Code. For the development a dev container is available. This container contains all the necessary tools to develop the application. The container is based on the official node image.
 
 ### Environment Variables
+
 To control the application behavior the following environment variables are available:
 
     # Authentication
@@ -51,11 +61,13 @@ To control the application behavior the following environment variables are avai
     MONGO_DB_STRING=db
 
 ## Local DB
+
 Using the following docker command a local mongo DB instance can be instantiated.
 
     docker run -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 --name crowdmanager-mongo -d --restart always mongo
 
 ## Example POST Query
+
 Using the following code snippet measurement points can be added.
 
 ```powershell
@@ -74,6 +86,7 @@ $response | ConvertTo-Json
 ```
 
 ### Available Scripts - nextjs
+
 In the project directory, you can run:
 
 #### `npm start`
@@ -109,8 +122,8 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-
 ## Production
+
 The application is deployed on a Docker Swarm cluster. The docker-compose file is located in the root directory of the project.
 
 The build and deployment is done using GitHub Actions.

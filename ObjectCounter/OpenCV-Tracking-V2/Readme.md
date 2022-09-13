@@ -1,10 +1,13 @@
 # Object Tracking with OpenCV using a Machine Learning approach
 
 ## Pre-requisites
+
 OpenCV with CUDA support
 
 ## Setup
+
 Activate the virtual env using the following commands.
+
 ```bash
 %conda env create -f conda-gpu.yml
 %conda activate opencv-tracking-v1
@@ -12,11 +15,12 @@ Activate the virtual env using the following commands.
 
 Furthermore OpenCV must be compiled with CUDA support. This can be done by following the instructions on the [Pre-Requisites Read Me](../_Prerequisite_OpenCV_CUDA/Readme.md).
 
-
 All configurations for the app can be made within the [settings.py](settings.py) file.
 
 ## Components
+
 ### Detection
+
 The detection uses the MOG2 background subtraction algorithm to detect moving objects. It is a Gaussian Mixture-based Segmentation algorithm.
 The idea is that the longer the color stays the higher the probability that it is a part of the background. This information can be used to identify object and background within the image. The gaussian distribution helps this method to adapt to variance in illumination.
 
@@ -28,6 +32,7 @@ object_detector = cv2.createBackgroundSubtractorMOG2(history=settings.history, v
 ```
 
 The class has the following parameters:
+
 - history : Length of history. (Default=500). The history states how many previous frames are used to detect moving objects. The longer the history the more stable the object detection is. The higher the value less detection, but also less false positives.
 - varThreshold : This value determines whether a pixel is well described by its background model. (Default=16).
 
@@ -61,30 +66,38 @@ if area > settings.min_area:
 ```
 
 ### Tracking
+
 The tracker keeps track of all the objects that are detected. It uses the Euclidian Distance between the centroids of the bounding boxes to determine if the object is the same as the previous frame. If the distance is below a certain threshold the object is considered the same. If the distance is above the threshold the object is considered a new object.
 
 ## Usage
+
 The [main.ipynb](./main.ipynb) file is the entry point for the application. It initializes the producer which is the encapsulates the detection and tracking logic. By executing the run method the detection and tracking will start. The run method has the following parameters:
+
 - use_video_file: If set to true the video file will be used as input. If set to false the webcam will be used as input.
 - video_file_path: The path to the video file. This parameter is only used if `use_video_file` is set to true.
 - roi_selection: If set to true the user will be asked to select the region of interest. If set to false the region of interest will be set to the whole image.
 
 Within the producer the two components `EuclidianDistTracker` and `cv2` are initialized. If required the user is prompted to define the region of interest. CV2 loads the video file or the webcam and executes the following steps
-1) apply the region of interest on the frame
-2) detects the objects using the described method above
 
-The `EuclidianDistTracker` receives the detections per frame. It then uses the method described above to determine if the object is the same as the previous frame. If the object is the same the bounding box is updated. If the object is not the same a new bounding box is created. The ***tracked*** objects are then displayed on the screen.
+1. apply the region of interest on the frame
+2. detects the objects using the described method above
+
+The `EuclidianDistTracker` receives the detections per frame. It then uses the method described above to determine if the object is the same as the previous frame. If the object is the same the bounding box is updated. If the object is not the same a new bounding box is created. The **_tracked_** objects are then displayed on the screen.
 
 ## Results
+
 ![OpenCV2 Result](../../Documentation/OpenCV2.gif)
 
 ## Evaluation
 
 ## Conclusion
+
 Based on the above evaluation the following conclusions can be drawn:
+
 - limited approach
 - object classses can not be determined
 
 ## References
+
 [1] https://pysource.com/2021/01/28/object-tracking-with-opencv-and-python/
 [2] https://www.authentise.com/post/segment-background-using-computer-vision

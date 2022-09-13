@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   crowdmanager:
     image: ghcr.io/jimmylevell/crowd-overview/crowdmanager:latest
