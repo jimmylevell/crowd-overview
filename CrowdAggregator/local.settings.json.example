@@ -1,7 +1,7 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "<Azure Storage>",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "MONGO_DB_STRING": "mongodb://mongoadmin:password@localhost:27017/crowdmanager?authSource=admin",
     "PUSHER_APP_ID": "",
