@@ -3,25 +3,84 @@ import { randomBytes } from 'crypto'
 
 export default function CheckpointEditor(props) {
   const _id = props.checkpoint?._id
-  const [passwordType, setPasswordType] = useState('password')
+
   const [name, setName] = useState('')
+  const [passwordType, setPasswordType] = useState('password')
   const [api_key, setApi_key] = useState('')
+  const [startPoints, setStartPoints] = useState([])
+  const [selectedStartPoints, setSelectedStartPoints] = useState([])
+  const [endPoints, setEndPoints] = useState([])
+  const [selectedEndPoints, setSelectedEndPoints] = useState([])
 
   useEffect(() => {
+    initCheckpoint()
+    addStartingEndingPoints()
+  }, [props.checkpoints, props.checkpoint, props.settings])
+
+  const initCheckpoint = () => {
     if (props.checkpoint) {
       setName(props.checkpoint.name)
       setApi_key(props.checkpoint.api_key)
+      setSelectedStartPoints(props.checkpoint.inbound_connections)
+      setSelectedEndPoints(props.checkpoint.outbound_connections)
     }
-  }, [props.checkpoint])
+  }
 
+  const addStartingEndingPoints = () => {
+    if (props.settings) {
+      // add starting points according to defined number of starting points
+      let startingPoints = []
+      for (let i = 1; i <= props.settings.number_of_start_points; i++) {
+        startingPoints.push({ key: 'start_' + i, value: 'Start Point ' + i })
+      }
+
+      startingPoints = addCheckpoints(startingPoints, props.checkpoints)
+      setStartPoints(startingPoints)
+
+      // add ending points according to defined number of ending points
+      let endingPoints = []
+      for (let i = 1; i <= props.settings.number_of_end_points; i++) {
+        endingPoints.push({ key: 'end_' + i, value: 'End Point ' + i })
+      }
+
+      endingPoints = addCheckpoints(endingPoints, props.checkpoints)
+
+      setEndPoints(endingPoints)
+    }
+  }
+
+  const addCheckpoints = (points, checkpoints) => {
+    let pnts = points
+    checkpoints.forEach((checkpoint) => {
+      if (checkpoint._id !== _id) {
+        pnts.push({
+          key: checkpoint._id,
+          value: 'Checkpoint ' + checkpoint.name,
+        })
+      }
+    })
+
+    return pnts
+  }
+
+  const getMultipleSelectOptions = (e) => {
+    return [...e.target.selectedOptions].map((o) => o.value)
+  }
   const handleChange = (e) => {
     const { name, value } = e.target
+
     switch (name) {
       case 'checkpointName':
         setName(value)
         break
       case 'checkpointAPIkey':
         setApi_key(value)
+        break
+      case 'startPoints':
+        setSelectedStartPoints(getMultipleSelectOptions(e))
+        break
+      case 'endPoints':
+        setSelectedEndPoints(getMultipleSelectOptions(e))
         break
       default:
         break
@@ -35,10 +94,14 @@ export default function CheckpointEditor(props) {
       _id: _id,
       name: name,
       api_key: api_key,
+      inbound_connections: selectedStartPoints,
+      outbound_connections: selectedEndPoints,
     })
 
     setName('')
     setApi_key('')
+    setSelectedStartPoints([])
+    setSelectedEndPoints([])
   }
 
   const generateKey = (e, size = 32, format = 'base64') => {
@@ -116,6 +179,54 @@ export default function CheckpointEditor(props) {
                         <i className="bi bi-arrow-clockwise"></i>
                       </button>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group row">
+                <label className="col-sm-2 col-form-label">
+                  Inbound Connection
+                </label>
+                <div className="col-sm-10">
+                  <div className="input-group mb-2">
+                    <select
+                      className="form-select"
+                      aria-label="Default select example"
+                      name="startPoints"
+                      multiple
+                      value={selectedStartPoints}
+                      onChange={handleChange}
+                    >
+                      {startPoints.map((point) => (
+                        <option key={point.key} value={point.key}>
+                          {point.value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group row">
+                <label className="col-sm-2 col-form-label">
+                  Outbound Connection
+                </label>
+                <div className="col-sm-10">
+                  <div className="input-group mb-2">
+                    <select
+                      className="form-select"
+                      aria-label="Default select example"
+                      multiple
+                      name="endPoints"
+                      onChange={handleChange}
+                      value={selectedEndPoints}
+                    >
+                      {endPoints.map((point) => (
+                        <option key={point.key} value={point.key}>
+                          {point.value}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>

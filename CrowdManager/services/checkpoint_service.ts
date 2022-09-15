@@ -1,4 +1,6 @@
 import { ICheckpoint } from '../model/Checkpoint'
+import { Node } from 'vis-network'
+import { getSettings } from './settings_service'
 
 export async function getCheckpoints() {
   return fetch('/api/checkpoint')
@@ -46,4 +48,55 @@ export async function updateCheckpoint(checkpoint: ICheckpoint) {
     .then((data) => {
       return data['checkpoint']
     })
+}
+
+function createNewNode(name, i) {
+  return JSON.parse(
+    JSON.stringify({
+      id: name + '_' + i,
+      shape: 'triangle',
+      size: 20,
+      label: name + ' ' + i,
+    })
+  )
+}
+
+export async function getResultingGraph() {
+  const checkpoints = await getCheckpoints()
+  const settings = await getSettings()
+
+  // add checkpoint to graph
+  const nodes: Node[] = checkpoints.map((checkpoint) => {
+    return {
+      id: checkpoint._id,
+      shape: 'box',
+      size: 20,
+      label: 'Checkpoint ' + checkpoint.name,
+    }
+  })
+
+  for (let i = 1; i <= settings.number_of_start_points; i++) {
+    nodes.push(createNewNode('start', i))
+  }
+
+  for (let i = 1; i <= settings.number_of_end_points; i++) {
+    nodes.push(createNewNode('end', i))
+  }
+
+  // add edges based on inbound and outbound connections from checkpoints
+  const edges = []
+  checkpoints.forEach((checkpoint) => {
+    checkpoint.inbound_connections.forEach((connection) => {
+      edges.push({ from: connection, to: checkpoint._id })
+    })
+
+    // create bidirectional edges
+    checkpoint.outbound_connections.forEach((connection) => {
+      edges.push({ from: checkpoint._id, to: connection })
+    })
+  })
+
+  const network = { nodes: nodes, edges: edges }
+
+  return network
 }

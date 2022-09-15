@@ -4,14 +4,16 @@ import db from '../utils/db'
 export interface ICheckpoint extends Document {
   api_key: String
   name: String
-  connected_checkpoints: [String]
+  inbound_connections: Array<String>
+  outbound_connections: Array<String>
 }
 
 const CheckpointSchema: Schema = new Schema(
   {
     api_key: String,
     name: String,
-    connected_checkpoints: [String],
+    inbound_connections: [String],
+    outbound_connections: [String],
   },
   {
     collection: 'checkpoints',

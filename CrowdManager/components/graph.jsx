@@ -1,8 +1,7 @@
 import { useState, useEffect, createRef } from 'react'
-import { Network, parseDOTNetwork } from 'vis-network/standalone'
+import { Network } from 'vis-network/standalone'
 
 export default function Graph(props) {
-  const [data, setData] = useState([])
   const [appRef, setAppRef] = useState(createRef())
 
   const options = {
@@ -18,34 +17,23 @@ export default function Graph(props) {
         inherit: false,
       },
     },
-    physics: {
-      stabilization: false,
-      barnesHut: {
-        springLength: 200,
-      },
-    },
+
     interaction: {
       dragNodes: true,
     },
-    /*
-        layout: {
-          hierarchical: {
-              direction: "UD",
-              sortMethod: "directed"
-          }
-        },
-        */
+
+    layout: {
+      hierarchical: {
+        direction: 'UD',
+        sortMethod: 'directed',
+      },
+    },
   }
 
   useEffect(() => {
-    const object = parseDOTNetwork(props.data)
-    setData(object)
-  }, [props.data])
-
-  useEffect(() => {
-    const network = new Network(appRef.current, data, options)
+    const network = new Network(appRef.current, props?.data, options)
     network.stabilize()
-  }, [data])
+  }, [props.data])
 
   return <div className="graph" ref={appRef} />
 }

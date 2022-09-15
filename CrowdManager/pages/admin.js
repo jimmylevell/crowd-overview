@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/layout'
 import Checkpoint from '../components/checkpoint'
 import CheckpointEditor from '../components/checkpoint-editor'
+import SettingsEditor from '../components/settings.editor'
 import ToastNotification from '../components/toastnotification'
 import MeasurementsModal from '../components/measurements-modal'
 import AggregationsModal from '../components/aggregations-modal'
@@ -16,18 +17,34 @@ import {
   updateCheckpoint,
   createCheckpoint,
   deleteCheckpoint,
+  getResultingGraph,
 } from '../services/checkpoint_service'
+import {
+  createSettings,
+  updateSettings,
+  getSettings,
+} from '../services/settings_service'
 
 export default function Admin() {
+  const [settings, setSettings] = useState(null)
+
   const [checkpointSelected, setcheckpointSelected] = useState(null)
   const [checkpoints, setCheckpoints] = useState([])
+
+  const [graph, setGraph] = useState(null)
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [message, setMessage] = useState(null)
 
   useEffect(() => {
+    loadSettings()
     loadCheckpoints()
   }, [])
+
+  useEffect(() => {
+    loadGraph()
+  }, [checkpoints, settings])
 
   const handleCheckpointChange = (checkpoint) => {
     if (checkpoint._id) {
@@ -51,6 +68,56 @@ export default function Admin() {
           setMessage('Error creating checkpoint ' + checkpoint.name)
         })
     }
+  }
+
+  const handleSettingsChange = (settings) => {
+    if (settings._id) {
+      updateSettings(settings)
+        .then(() => {
+          setSettings(settings)
+          setMessage('Settings updated successfully')
+        })
+        .catch((err) => {
+          setError(err)
+          setMessage('Error updating settings')
+        })
+    } else {
+      createSettings(settings)
+        .then(() => {
+          setSettings(settings)
+          setMessage('Settings created successfully')
+        })
+        .catch((err) => {
+          setError(err)
+          setMessage('Error creating settings')
+        })
+    }
+  }
+
+  const loadGraph = async () => {
+    getResultingGraph()
+      .then((data) => {
+        if (data) {
+          setGraph(data)
+        }
+      })
+      .catch((err) => {
+        setError(err)
+        setMessage('Error loading graph')
+      })
+  }
+
+  const loadSettings = async () => {
+    getSettings()
+      .then((data) => {
+        if (data) {
+          setSettings(data)
+        }
+      })
+      .catch((err) => {
+        setError(err)
+        setMessage('Error loading settings')
+      })
   }
 
   const loadCheckpoints = async () => {
@@ -98,16 +165,30 @@ export default function Admin() {
         <div className="col-sm-4">
           <button
             type="button"
-            className="btn btn-primary mb-3"
+            className="btn btn-primary ml-3"
             data-bs-toggle="modal"
             data-bs-target="#checkpointeditor"
           >
             <i className="bi bi-plus-lg"></i> Add Checkpoint
           </button>
+
+          <button
+            type="button"
+            className="btn btn-primary m-3"
+            data-bs-toggle="modal"
+            data-bs-target="#settingseditor"
+          >
+            <i className="bi bi-pencil"></i> Edit Global Settings
+          </button>
+
           <CheckpointEditor
             checkpoint={checkpointSelected}
+            checkpoints={checkpoints}
             onSubmit={handleCheckpointChange}
+            settings={settings}
           />
+
+          <SettingsEditor settings={settings} onSubmit={handleSettingsChange} />
 
           <MeasurementsModal checkpoint={checkpointSelected} />
           <AggregationsModal checkpoint={checkpointSelected} />
@@ -129,13 +210,7 @@ export default function Admin() {
           )}
         </div>
 
-        <div className="col-sm-8">
-          <Graph
-            data={
-              'dinetwork {node[shape=circle]; 1 -> 1 -> 2; 2 -> 3; 2 -- 4; 2 -> 1 }'
-            }
-          />
-        </div>
+        <div className="col-sm-8">{graph && <Graph data={graph} />}</div>
       </div>
     </Layout>
   )
