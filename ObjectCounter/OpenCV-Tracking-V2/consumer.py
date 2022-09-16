@@ -34,15 +34,15 @@ class ConsumerThread(threading.Thread):
     def process(self, data):
         if any(data) and len(data) > 0:
             for obj in data:
-                if self.objects_detected < (obj.track_id + 1):
+                if self.objects_detected < (obj.id + 1):
                     self.objects_detected += 1
 
-                    print("Info: Object {} detected.".format(obj.track_id))
+                    print("Info: Object {} detected.".format(obj.id))
                     self.post_data(
-                        id=obj.track_id,
-                        object_class=obj.class_name,
-                        confidence_score=obj.get_confidence_score(),
-                        direction="",
+                        id=obj.id,
+                        object_class=obj.class_id,
+                        confidence_score=obj.score,
+                        direction=obj.direction,
                         measured_at=obj.measured_at,
                     )
 

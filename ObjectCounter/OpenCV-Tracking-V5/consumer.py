@@ -2,6 +2,7 @@ import threading
 import settings
 import requests
 import traceback
+import datetime
 
 
 class ConsumerThread(threading.Thread):
@@ -32,18 +33,20 @@ class ConsumerThread(threading.Thread):
             settings.condition.release()
 
     def process(self, data):
-        if any(data) and len(data) > 0:
+        data = data[0]
+        if len(data) > 0:
             for obj in data:
-                if self.objects_detected < (obj.track_id + 1):
+                id = int(obj[4])
+                if self.objects_detected < (id + 1):
                     self.objects_detected += 1
 
-                    print("Info: Object {} detected.".format(obj.track_id))
+                    print("Info: Object {} detected.".format(id))
                     self.post_data(
-                        id=obj.track_id,
-                        object_class=obj.class_name,
-                        confidence_score=obj.get_confidence_score(),
+                        id=id,
+                        object_class=int(obj[5]),
+                        confidence_score=obj[7],
                         direction="",
-                        measured_at=obj.measured_at,
+                        measured_at=datetime.datetime.utcfromtimestamp(obj[6]),
                     )
 
     def post_data(self, id, object_class, confidence_score, direction, measured_at):
@@ -57,6 +60,8 @@ class ConsumerThread(threading.Thread):
                 }
             ]
         }
+
+        print(data)
 
         try:
             response = requests.post(

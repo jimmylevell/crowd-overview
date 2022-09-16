@@ -3,7 +3,7 @@ import sys
 import os
 from pathlib import Path
 
-from producer import run
+from tracker import run
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # yolov5 strongsort root directory

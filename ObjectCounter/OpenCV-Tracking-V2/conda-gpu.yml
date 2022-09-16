@@ -4,5 +4,8 @@ dependencies:
   - python==3.9
   - pip
   - pip:
-    - opencv-contrib-python
-    - ipykernel
+      - opencv-contrib-python
+      - ipykernel
+      - GitPython
+      - scipy
+      - matplotlib

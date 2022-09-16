@@ -1,13 +1,11 @@
-import sys
 import settings
-
 from consumer import ConsumerThread
 from producer import ProducerThread
 
 
 def main():
     settings.init()
-    ProducerThread(source="los_angeles.mp4", show_vid=True).start()
+    ProducerThread(use_video_file=True).start()
     ConsumerThread().start()
 
 

@@ -1,113 +1,142 @@
+import threading
 import cv2
 import sys
 import settings
+
 from tracker import EuclideanDistTracker
+from detection import Detection
 
 
-def get_region_of_interest_selection(frame):
-    # Extract Region of interest ROI
-    roi_coordinates = cv2.selectROI(frame, False)
-    cv2.destroyAllWindows()
-    print("Region of interest: ", roi_coordinates)
-    return roi_coordinates
+class ProducerThread(threading.Thread):
+    def __init__(
+        self,
+        use_web_cam=False,
+        cam_index=0,
+        use_video_file=False,
+        video_file_path="highway.mp4",
+        roi_selection=True,
+    ):
+        super(ProducerThread, self).__init__()
 
+        # Create tracker object
+        self.tracker = EuclideanDistTracker()
 
-def run(
-    use_web_cam=False,
-    cam_index=0,
-    use_video_file=False,
-    video_file_path="los_angeles.mp4",
-    roi_selection=True,
-):
-    # Create tracker object
-    tracker = EuclideanDistTracker()
+        if use_web_cam:
+            self.cap = cv2.VideoCapture(cam_index)
+        elif use_video_file:
+            self.cap = cv2.VideoCapture(video_file_path)
+        else:
+            print("Error: No video source selected.")
+            sys.exit(1)
 
-    if use_web_cam:
-        cap = cv2.VideoCapture(cam_index)
-    elif use_video_file:
-        cap = cv2.VideoCapture(video_file_path)
-    else:
-        print("Error: No video source selected.")
-        sys.exit(1)
+        # Read first frame
+        ok, frame = self.cap.read()
+        if not ok:
+            print("Cannot read video file")
+            sys.exit()
 
-    # Read first frame
-    ok, frame = cap.read()
-    if not ok:
-        print("Cannot read video file")
-        sys.exit()
+        # Extract Region of interest ROI
+        if roi_selection:
+            self.roi_coordinates = self.get_region_of_interest_selection(frame)
+        else:
+            self.roi_coordinates = (0, frame.shape[2], frame.shape[1], frame.shape[0])
+            print("Default Region of interest: ", self.roi_coordinates)
 
-    # Extract Region of interest ROI
-    if roi_selection:
-        roi_coordinates = get_region_of_interest_selection(frame)
-    else:
-        roi_coordinates = (0, frame.shape[2], frame.shape[1], frame.shape[0])
-        print("Default Region of interest: ", roi_coordinates)
-
-    # Object detection from Stable camera, extract the moving objects from the stable camera¨
-    # the longer the history the more stable the object detection is
-    # the higher the value less detection, but also less false positives
-    object_detector = cv2.createBackgroundSubtractorMOG2(
-        history=settings.history, varThreshold=settings.varThreshold
-    )
-
-    while True:
-        ret, frame = cap.read()
-        height, width, _ = frame.shape
-
-        # 1. Object Detection
-        roi = frame[
-            int(roi_coordinates[1]) : int(roi_coordinates[1] + roi_coordinates[3]),
-            int(roi_coordinates[0]) : int(roi_coordinates[0] + roi_coordinates[2]),
-        ]
-        cv2.rectangle(
-            frame,
-            (roi_coordinates[0], roi_coordinates[1]),
-            (
-                roi_coordinates[0] + roi_coordinates[2],
-                roi_coordinates[1] + roi_coordinates[3],
-            ),
-            (255, 0, 0),
-            2,
+        # Object detection from Stable camera, extract the moving objects from the stable camera¨
+        # the longer the history the more stable the object detection is
+        # the higher the value less detection, but also less false positives
+        self.object_detector = cv2.createBackgroundSubtractorMOG2(
+            history=settings.history, varThreshold=settings.varThreshold
         )
-        mask = object_detector.apply(roi)
 
-        # remove noise from the mask
-        _, mask = cv2.threshold(mask, settings.noise_threshold, 255, cv2.THRESH_BINARY)
+    def add_to_queue(self, data):
+        settings.condition.acquire()
+        settings.queue.append(data)
+        settings.condition.notify()
+        settings.condition.release()
 
-        # extract coordinates of moving objects
-        contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    def get_region_of_interest_selection(self, frame):
+        # Extract Region of interest ROI
+        self.roi_coordinates = cv2.selectROI(frame, False)
+        cv2.destroyAllWindows()
+        print("Region of interest: ", self.roi_coordinates)
+        return self.roi_coordinates
 
-        # collect all detections (bounding boxes)
-        detections = []
-        for cnt in contours:
-            # Calculate area and remove small elements
-            area = cv2.contourArea(cnt)
-            if area > settings.min_area:
-                x, y, w, h = cv2.boundingRect(cnt)
-                detections.append([x, y, w, h])
+    def run(self):
+        while True:
+            ret, frame = self.cap.read()
+            height, width, _ = frame.shape
 
-        # 2. Object Tracking
-        boxes_ids = tracker.update(detections)
-        for box_id in boxes_ids:
-            x, y, w, h, id, direction = box_id
-            cv2.putText(
-                roi,
-                str(id) + " " + format(direction, ".2f"),
-                (x, y - 15),
-                cv2.FONT_HERSHEY_PLAIN,
-                2,
+            # 1. Object Detection
+            roi = frame[
+                int(self.roi_coordinates[1]) : int(
+                    self.roi_coordinates[1] + self.roi_coordinates[3]
+                ),
+                int(self.roi_coordinates[0]) : int(
+                    self.roi_coordinates[0] + self.roi_coordinates[2]
+                ),
+            ]
+            cv2.rectangle(
+                frame,
+                (self.roi_coordinates[0], self.roi_coordinates[1]),
+                (
+                    self.roi_coordinates[0] + self.roi_coordinates[2],
+                    self.roi_coordinates[1] + self.roi_coordinates[3],
+                ),
                 (255, 0, 0),
                 2,
             )
-            cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            mask = self.object_detector.apply(roi)
 
-        cv2.imshow("roi", roi)
-        cv2.imshow("Frame", frame)
-        cv2.imshow("Mask", mask)
+            # remove noise from the mask
+            _, mask = cv2.threshold(
+                mask, settings.noise_threshold, 255, cv2.THRESH_BINARY
+            )
 
-        key = cv2.waitKey(30)
-        if key == 27:
-            break
+            # extract coordinates of moving objects
+            contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    cap.release()
-    cv2.destroyAllWindows()
+            # collect all detections (bounding boxes)
+            detections = []
+            for cnt in contours:
+                # Calculate area and remove small elements
+                area = cv2.contourArea(cnt)
+                if area > settings.min_area:
+                    x, y, w, h = cv2.boundingRect(cnt)
+                    detections.append(Detection("", "", (x, y, w, h)))
+
+            # 2. Object Tracking
+            detections = self.tracker.update(detections)
+            for detection in detections:
+                id = detection.id
+                direction = detection.direction
+                x = detection.x
+                y = detection.y
+                w = detection.w
+                h = detection.h
+
+                cv2.putText(
+                    roi,
+                    str(id) + " " + format(direction, ".2f"),
+                    (x, y - 15),
+                    cv2.FONT_HERSHEY_PLAIN,
+                    2,
+                    (255, 0, 0),
+                    2,
+                )
+                cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
+            # update consumer
+            self.add_to_queue(detections)
+
+            cv2.imshow("roi", roi)
+            cv2.imshow("Frame", frame)
+            cv2.imshow("Mask", mask)
+
+            key = cv2.waitKey(30)
+            if key == 27:
+                self.add_to_queue(settings._sentinel)
+                break
+
+        self.cap.release()
+        cv2.destroyAllWindows()

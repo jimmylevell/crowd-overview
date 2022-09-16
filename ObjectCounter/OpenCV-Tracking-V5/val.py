@@ -118,10 +118,6 @@ def parse_opt():
 
 
 def main(opt):
-    check_requirements(
-        requirements=ROOT / "requirements.txt", exclude=("tensorboard", "thop")
-    )
-
     # download eval files
     dst_val_tools_folder = ROOT / "val_utils"
     setup_evaluation(dst_val_tools_folder)
@@ -155,7 +151,7 @@ def main(opt):
                 src_seq_path = seq_path
                 shutil.move(str(src_seq_path), str(dst_seq_path))
 
-            p = subprocess.Popen(
+            subprocess.run(
                 [
                     "python",
                     "testrunner.py",
@@ -180,10 +176,6 @@ def main(opt):
                     "--eval",
                 ]
             )
-            processes.append(p)
-
-        for p in processes:
-            p.wait()
 
     results = (
         save_dir.parent / opt.eval_existing / "tracks"

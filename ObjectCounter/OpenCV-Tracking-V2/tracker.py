@@ -1,13 +1,15 @@
 import math
 import settings
 
+from detection import Detection
+
 settings.init()
 
 
 class EuclideanDistTracker:
     def __init__(self):
-        # Store the center positions of the objects
-        self.center_points = {}
+        self.detections = {}
+
         # Keep the count of the IDs
         # each time a new object id detected, the count will increase by one
         self.id_count = 0
@@ -26,43 +28,51 @@ class EuclideanDistTracker:
         direction = self.get_angle(p1, p2)
         return direction
 
+    def reset_detection_status(self):
+        for detection in self.detections.values():
+            detection.matched = False
+
+    def add_detection(self, new_detections):
+        for new_detection in new_detections:
+            self.detections[new_detection.id] = new_detection
+
+    def remove_old_detections(self):
+        unmatched_detections = [
+            detection for detection in self.detections.values() if not detection.matched
+        ]
+        for unmatched_detection in unmatched_detections:
+            del self.detections[unmatched_detection.id]
+
     # receives detections
-    def update(self, objects_rect):
-        # Objects boxes and ids
-        objects_bbs_ids = []
+    def update(self, new_detections):
+        newly_detected = []
 
-        # Get center point of new object
-        for rect in objects_rect:
-            x, y, w, h = rect
-            cx = (x + x + w) // 2
-            cy = (y + y + h) // 2
+        self.reset_detection_status()
 
-            # Find out if that object was detected already
-            same_object_detected = False
-            for id, pts in self.center_points.items():
-                pt = pts[-1]
-                dist = math.hypot(cx - pt[0], cy - pt[1])
+        for new_detection in new_detections:
+            for detection in self.detections.values():
+                distance = detection.get_distance(
+                    new_detection.get_cx(), new_detection.get_cy()
+                )
 
-                if dist < settings.euclidean_dist_threshold:
-                    self.center_points[id].append((cx, cy))
-                    direction = self.get_direction(self.center_points[id])
-                    objects_bbs_ids.append([x, y, w, h, id, direction])
-                    same_object_detected = True
+                if distance < settings.max_distance:
+                    detection.x = new_detection.x
+                    detection.y = new_detection.y
+                    detection.w = new_detection.w
+                    detection.h = new_detection.h
+                    detection.matched = True
+
+                    detection.detections += 1
+
+                    new_detection.matched = True
                     break
 
-            # New object is detected we assign the ID to that object
-            if same_object_detected is False:
-                self.center_points[self.id_count] = [(cx, cy)]
-                objects_bbs_ids.append([x, y, w, h, self.id_count, 0])
+            if not new_detection.matched:
                 self.id_count += 1
+                new_detection.id = self.id_count
+                newly_detected.append(new_detection)
 
-        # Clean the dictionary by center points to remove IDS not used anymore
-        new_center_points = {}
-        for obj_bb_id in objects_bbs_ids:
-            _, _, _, _, object_id, _ = obj_bb_id
-            center = self.center_points[object_id]
-            new_center_points[object_id] = center
+        self.remove_old_detections()
+        self.add_detection(newly_detected)
 
-        # Update dictionary with IDs not used removed
-        self.center_points = new_center_points.copy()
-        return objects_bbs_ids
+        return self.detections.values()

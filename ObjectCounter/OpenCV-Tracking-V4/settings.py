@@ -34,3 +34,12 @@ def init():
 
     global tiny
     tiny = False
+
+    global auth_token
+    auth_token = "api-key"
+
+    global backend_url
+    backend_url = "http://localhost:3000/api/checkpoint/measurement/"
+
+    global checkpoint_id
+    checkpoint_id = "63230f4c8fa6bc13424a1c8c"
