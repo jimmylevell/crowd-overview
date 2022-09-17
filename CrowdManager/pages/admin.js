@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/layout'
 import Checkpoint from '../components/checkpoint'
 import CheckpointEditor from '../components/checkpoint-editor'
-import SettingsEditor from '../components/settings.editor'
+import SettingsEditor from '../components/settings-editor'
 import ToastNotification from '../components/toastnotification'
 import MeasurementsModal from '../components/measurements-modal'
 import AggregationsModal from '../components/aggregations-modal'
@@ -168,6 +168,7 @@ export default function Admin() {
             className="btn btn-primary ml-3"
             data-bs-toggle="modal"
             data-bs-target="#checkpointeditor"
+            onClick={() => setcheckpointSelected(null)}
           >
             <i className="bi bi-plus-lg"></i> Add Checkpoint
           </button>

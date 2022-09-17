@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 
 import styles from './index.module.css'
 import Layout from '../components/layout'
+import ToastNotification from '../components/toastnotification'
 
 import { getResultingGraph } from '../services/checkpoint_service'
 
@@ -13,6 +14,8 @@ const Graph = dynamic(() => import('../components/graph'), {
 
 export default function Home() {
   const [graph, setGraph] = useState(null)
+  const [error, setError] = useState(null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     loadGraph()
@@ -33,6 +36,8 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <ToastNotification body={message} error={error} />
+
       <Layout>
         <h1 className={styles.title}>Crowd Manager</h1>
 

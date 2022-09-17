@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 export default function SettingsEditor(props) {
-  const [id, setId] = useState('')
+  const [id, setId] = useState(null)
   const [numbeOfStartPoints, setNumbeOfStartPoints] = useState(0)
   const [numberOfEndPoints, setNumberOfEndPoints] = useState(0)
 

@@ -23,6 +23,11 @@ export default function CheckpointEditor(props) {
       setApi_key(props.checkpoint.api_key)
       setSelectedStartPoints(props.checkpoint.inbound_connections)
       setSelectedEndPoints(props.checkpoint.outbound_connections)
+    } else {
+      setName('')
+      setApi_key('')
+      setSelectedStartPoints([])
+      setSelectedEndPoints([])
     }
   }
 
