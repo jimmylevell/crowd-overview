@@ -53,9 +53,23 @@ Using the [Traffic3D](https://traffic3d.org/) which is a traffic simulation prog
 
 ## Development
 
+Client server architecture
+
+Server running Unreal Engine
+
+```bash
+.\CarlaUE4.exe -carla-rpc-port=3000
+
+```
+
+Python as Client to interact with the server and influence the simulation
+
+```python.
+
 ## Production
 
 ## References
 
 [1] https://towardsdatascience.com/peoplesanspeople-generating-synthetic-data-of-virtual-human-beings-in-unity-a1847a56895c
 [2] https://www.altexsoft.com/blog/synthetic-data-generation/
+```

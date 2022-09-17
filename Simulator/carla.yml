@@ -1,0 +1,18 @@
+name: carla
+
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python==3.8
+  - pip
+  - pip:
+      - ipykernel
+      - pygame
+      - carla
+      - future
+      - numpy==1.18.4
+      - matplotlib
+      - open3d
+      - Pillow
+      - opencv-python

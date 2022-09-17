@@ -13,6 +13,9 @@ yolov5m.pt
 crowdhuman_yolov5m.pt
 osnet_x1_0_dukemtmcreid.pt
 
+# carla installer
+Carla
+
 # exclude runs
 runs
 
