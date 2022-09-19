@@ -28,7 +28,7 @@
     "vis-network": "^9.1.2"
   },
   "devDependencies": {
-    "@types/react": "^18.0.19",
+    "@types/react": "^18.0.20",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0",
     "eslint-config-prettier": "^8.5.0",
