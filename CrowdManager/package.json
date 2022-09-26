@@ -14,7 +14,7 @@
     "bootstrap-icons": "^1.9.1",
     "crypto": "^1.0.1",
     "mongoose": "^6.6.1",
-    "next": "^12.3.0",
+    "next": "^12.3.1",
     "next-auth": "^4.10.2",
     "pino": "^8.6.0",
     "pusher": "^5.1.1-beta",
