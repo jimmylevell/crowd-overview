@@ -42,9 +42,9 @@ The document database should provide persistency for the individual measurements
 
 #### Components - Simulator - [Repo]()
 
-Virtual environment to test the application setup.
+Carla serves as virtual environment for development and testing of the ecosystem as such. The virtual environment generates an artificial landscape where pedestrians and vehicles (e.g., bicycles, motorbikes, and cars) are moving around naturally. Furthermore, the simulation provides well-defined endpoints to modify and more importantly read the artificial environment. Lastly visual sensors are placed within the simulation which provide a readable stream of the visualization. These streams can be used to test and train the object detection algorithm. 
 
-Technology: Unity
+Technology: Carla
 
 ### Architecture
 
