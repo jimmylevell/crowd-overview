@@ -15,7 +15,7 @@
     "crypto": "^1.0.1",
     "mongoose": "^6.6.5",
     "next": "^12.3.1",
-    "next-auth": "^4.13.0",
+    "next-auth": "^4.14.0",
     "pino": "^8.6.1",
     "pusher": "^5.1.1-beta",
     "pusher-js": "^7.4.0",
