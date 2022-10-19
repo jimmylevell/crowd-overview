@@ -17,6 +17,20 @@ const pusher = new Pusher({
   useTLS: true,
 })
 
+/**
+ * @swagger
+ * /api/checkpoint/measurement/{id}:
+ *  get:
+ *     description: Returns the measurements of a checkpoint
+ *     responses:
+ *       200:
+ *         description: JSON object with the measurements of a checkpoint
+ *  post:
+ *     description: creating a new measurment on a checkpoint
+ *     responses:
+ *       200:
+ *         description: JSON object with the current measurement
+ */
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
   const email = session?.user?.email

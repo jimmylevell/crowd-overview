@@ -4,6 +4,15 @@ import { getAggregationsByCheckpointId } from '../../../../model/Aggregation'
 import logger from '../../../../services/logger'
 import { authOptions } from '../../auth/[...nextauth]'
 
+/**
+ * @swagger
+ * /api/checkpoint/aggregation/{id}:
+ *   get:
+ *     description: Returns the aggregations of a checkpoint
+ *     responses:
+ *       200:
+ *         description: JSON object with the aggregations of a checkpoints
+ */
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
   const email = session?.user?.email

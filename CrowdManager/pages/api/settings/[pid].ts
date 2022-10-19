@@ -4,6 +4,15 @@ import { updateSettings, ISettings } from '../../../model/Settings'
 import logger from '../../../services/logger'
 import { authOptions } from '../auth/[...nextauth]'
 
+/**
+ * @swagger
+ * /api/settings:
+ *   put:
+ *     description: Updates the settings of the application
+ *     responses:
+ *       200:
+ *         description: JSON object with the updated settings
+ */
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
   const email = session?.user?.email

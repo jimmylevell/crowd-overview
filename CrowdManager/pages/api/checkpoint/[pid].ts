@@ -9,6 +9,15 @@ import {
 import logger from '../../../services/logger'
 import { authOptions } from '../auth/[...nextauth]'
 
+/**
+ * @swagger
+ * /api/checkpoint/{id}:
+ *   put:
+ *     description: Updates the checkpoint with the given id
+ *     responses:
+ *       200:
+ *         description: JSON object with the updated checkpoint
+ */
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
   const email = session?.user?.email

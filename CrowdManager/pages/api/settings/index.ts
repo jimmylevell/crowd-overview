@@ -4,6 +4,20 @@ import { getSettings, createSettings, ISettings } from '../../../model/Settings'
 import logger from '../../../services/logger'
 import { authOptions } from '../auth/[...nextauth]'
 
+/**
+ * @swagger
+ * /api/settings:
+ *   get:
+ *     description: get all settings of the application
+ *     responses:
+ *       200:
+ *         description: JSON object with all settings
+ *   post:
+ *     description: adds new settings to the app
+ *     responses:
+ *       200:
+ *         description:JSON object with all settings
+*/
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
   const email = session?.user?.email
