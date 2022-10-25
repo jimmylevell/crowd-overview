@@ -15,9 +15,9 @@
     "crypto": "^1.0.1",
     "mongoose": "^6.6.5",
     "next": "^12.3.1",
-    "next-auth": "^4.14.0",
+    "next-auth": "^4.15.0",
     "next-swagger-doc": "^0.3.6",
-    "pino": "^8.6.1",
+    "pino": "^8.7.0",
     "pusher": "^5.1.1-beta",
     "pusher-js": "^7.4.0",
     "react": "18.2.0",
@@ -30,9 +30,9 @@
     "vis-network": "^9.1.2"
   },
   "devDependencies": {
-    "@types/react": "^18.0.21",
-    "@typescript-eslint/eslint-plugin": "^5.40.1",
-    "eslint": "8.25.0",
+    "@types/react": "^18.0.22",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "eslint": "8.26.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "husky": "^8.0.1"
