@@ -17,7 +17,7 @@ import { authOptions } from '../auth/[...nextauth]'
  *     responses:
  *       200:
  *         description:JSON object with all settings
-*/
+ */
 const handler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
   const email = session?.user?.email
