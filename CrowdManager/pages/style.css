@@ -61,5 +61,7 @@ a {
 }
 
 .graph {
-  height: 40vh;
+  height: 70vh;
+  width: 60vw;
+  border: 1px solid #eaeaea;
 }

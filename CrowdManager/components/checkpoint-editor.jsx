@@ -33,24 +33,15 @@ export default function CheckpointEditor(props) {
 
   const addStartingEndingPoints = () => {
     if (props.settings) {
-      // add starting points according to defined number of starting points
-      let startingPoints = []
-      for (let i = 1; i <= props.settings.number_of_start_points; i++) {
-        startingPoints.push({ key: 'start_' + i, value: 'Start Point ' + i })
+      // add static points according to defined number of static points
+      let staticPoints = []
+      for (let i = 1; i <= props.settings.number_of_static_points; i++) {
+        staticPoints.push({ key: 'static_' + i, value: 'Static Point ' + i })
       }
 
-      startingPoints = addCheckpoints(startingPoints, props.checkpoints)
-      setStartPoints(startingPoints)
-
-      // add ending points according to defined number of ending points
-      let endingPoints = []
-      for (let i = 1; i <= props.settings.number_of_end_points; i++) {
-        endingPoints.push({ key: 'end_' + i, value: 'End Point ' + i })
-      }
-
-      endingPoints = addCheckpoints(endingPoints, props.checkpoints)
-
-      setEndPoints(endingPoints)
+      staticPoints = addCheckpoints(staticPoints, props.checkpoints)
+      setStartPoints(staticPoints)
+      setEndPoints(staticPoints)
     }
   }
 

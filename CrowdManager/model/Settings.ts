@@ -2,14 +2,12 @@ import mongoose, { Document, model, models, Model, Schema } from 'mongoose'
 import db from '../utils/db'
 
 export interface ISettings extends Document {
-  number_of_start_points: number
-  number_of_end_points: number
+  number_of_static_points: number
 }
 
 const SettingsSchema: Schema = new Schema(
   {
-    number_of_start_points: Number,
-    number_of_end_points: Number,
+    number_of_static_points: Number,
   },
   {
     collection: 'settings',
