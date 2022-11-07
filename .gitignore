@@ -16,6 +16,9 @@ osnet_x1_0_dukemtmcreid.pt
 # carla installer
 Carla
 
+# training data
+output
+
 # exclude runs
 runs
 
