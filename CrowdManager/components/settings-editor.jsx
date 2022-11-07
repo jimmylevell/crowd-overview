@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react'
 
 export default function SettingsEditor(props) {
   const [id, setId] = useState(null)
-  const [numbeOfStartPoints, setNumbeOfStartPoints] = useState(0)
-  const [numberOfEndPoints, setNumberOfEndPoints] = useState(0)
+  const [numbeOfStaticPoints, setNumbeOfStaticPoints] = useState(0)
 
   useEffect(() => {
     if (props.settings) {
       setId(props.settings._id)
-      setNumbeOfStartPoints(props.settings.number_of_start_points)
-      setNumberOfEndPoints(props.settings.number_of_end_points)
+      setNumbeOfStaticPoints(props.settings.number_of_static_points)
     }
   }, [props.settings])
 
@@ -17,11 +15,8 @@ export default function SettingsEditor(props) {
     const { name, value } = e.target
 
     switch (name) {
-      case 'numbeOfStartPoints':
-        setNumbeOfStartPoints(value)
-        break
-      case 'numberOfEndPoints':
-        setNumberOfEndPoints(value)
+      case 'numbeOfStaticPoints':
+        setNumbeOfStaticPoints(value)
         break
       default:
         break
@@ -33,8 +28,7 @@ export default function SettingsEditor(props) {
 
     props.onSubmit({
       _id: id,
-      number_of_start_points: numbeOfStartPoints,
-      number_of_end_points: numberOfEndPoints,
+      number_of_static_points: numbeOfStaticPoints,
     })
   }
 
@@ -47,37 +41,18 @@ export default function SettingsEditor(props) {
             <form>
               <div className="form-group row">
                 <label className="col-sm-2 col-form-label">
-                  Number of Starting Points
+                  Number of Static Points
                 </label>
                 <div className="col-sm-10">
                   <input
                     type="number"
                     onChange={handleChange}
-                    value={numbeOfStartPoints}
+                    value={numbeOfStaticPoints}
                     className="form-control"
-                    name="numbeOfStartPoints"
-                    id="numbeOfStartPoints"
+                    name="numbeOfStaticPoints"
+                    id="numbeOfStaticPoints"
                     aria-describedby="NameHelp"
-                    placeholder="Enter Name the Number of Start Points"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-group row">
-                <label className="col-sm-2 col-form-label">
-                  Number of Ending Points
-                </label>
-                <div className="col-sm-10">
-                  <input
-                    type="number"
-                    onChange={handleChange}
-                    value={numberOfEndPoints}
-                    className="form-control"
-                    name="numberOfEndPoints"
-                    id="numberOfEndPoints"
-                    aria-describedby="NameHelp"
-                    placeholder="Enter the Number of End Points"
+                    placeholder="Enter Name the Number of Static Points"
                     required
                   />
                 </div>

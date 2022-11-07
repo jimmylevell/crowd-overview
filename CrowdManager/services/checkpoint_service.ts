@@ -53,9 +53,8 @@ export async function updateCheckpoint(checkpoint: ICheckpoint) {
 function createNewNode(name, i) {
   return JSON.parse(
     JSON.stringify({
-      id: name + '_' + i,
+      id: name.toLocaleLowerCase() + '_' + i,
       shape: 'triangle',
-      size: 20,
       label: name + ' ' + i,
     })
   )
@@ -70,29 +69,34 @@ export async function getResultingGraph() {
     return {
       id: checkpoint._id,
       shape: 'box',
-      size: 20,
       label: 'Checkpoint ' + checkpoint.name,
     }
   })
 
-  for (let i = 1; i <= settings.number_of_start_points; i++) {
-    nodes.push(createNewNode('start', i))
-  }
-
-  for (let i = 1; i <= settings.number_of_end_points; i++) {
-    nodes.push(createNewNode('end', i))
+  for (let i = 1; i <= settings.number_of_static_points; i++) {
+    nodes.push(createNewNode('Static', i))
   }
 
   // add edges based on inbound and outbound connections from checkpoints
   const edges = []
   checkpoints.forEach((checkpoint) => {
     checkpoint.inbound_connections.forEach((connection) => {
-      edges.push({ from: connection, to: checkpoint._id })
+      edges.push({
+        from: connection,
+        to: checkpoint._id,
+        length: 100,
+        smooth: false,
+      })
     })
 
     // create bidirectional edges
     checkpoint.outbound_connections.forEach((connection) => {
-      edges.push({ from: checkpoint._id, to: connection })
+      edges.push({
+        from: checkpoint._id,
+        to: connection,
+        length: 100,
+        smooth: false,
+      })
     })
   })
 
