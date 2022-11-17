@@ -159,7 +159,7 @@ def run(files=[], name="", object_class=0):
                             str(-1),
                             str(0),
                         )
-                        print(mot_metric)
+                        # print(mot_metric)
                         file.write(" ".join(mot_metric) + "\n")
                         file.flush()
 

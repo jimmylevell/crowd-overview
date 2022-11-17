@@ -33,12 +33,12 @@ def setup_evaluation(dst_val_tools_folder):
             zip_ref.extractall(dst_val_tools_folder)
 
     print("Download official MOT images")
-    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT16.zip"
-    if not os.path.exists(dst_val_tools_folder / "MOT16.zip"):
-        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT16.zip")
-    if not (dst_val_tools_folder / "data" / "MOT16").is_dir():
-        with zipfile.ZipFile(dst_val_tools_folder / "MOT16.zip", "r") as zip_ref:
-            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT16")
+    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT20.zip"
+    if not os.path.exists(dst_val_tools_folder / "MOT20.zip"):
+        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT20.zip")
+    if not (dst_val_tools_folder / "data" / "MOT20").is_dir():
+        with zipfile.ZipFile(dst_val_tools_folder / "MOT20.zip", "r") as zip_ref:
+            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT20")
 
 
 def main():
@@ -46,14 +46,13 @@ def main():
     setup_evaluation(dst_val_tools_folder)
 
     # set paths
-    mot_seqs_path = dst_val_tools_folder / "data" / "MOT16" / "train"
+    mot_seqs_path = dst_val_tools_folder / "data" / "MOT20" / "train"
     seq_paths = [p / "img1" for p in Path(mot_seqs_path).iterdir() if p.is_dir()]
 
     for i, seq_path in enumerate(seq_paths):
         # run tracking
-        dst_seq_path = seq_path.parent / seq_path.parent.name
         print("Run tracking on sequence", seq_path)
-        run(files=dst_seq_path.iterdir(), name=seq_path.parent.name, object_class=0)
+        run(files=seq_path.iterdir(), name=seq_path.parent.name, object_class=0)
 
     # run the evaluation on the generated txts
     subprocess.run(
@@ -61,7 +60,7 @@ def main():
             "python",
             dst_val_tools_folder / "scripts/run_mot_challenge.py",
             "--BENCHMARK",
-            "MOT16",
+            "MOT20",
             "--TRACKERS_TO_EVAL",
             ROOT / "runs" / "tracks" / "exp7",
             "--SPLIT_TO_EVAL",

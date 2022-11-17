@@ -48,12 +48,12 @@ def setup_evaluation(dst_val_tools_folder):
             zip_ref.extractall(dst_val_tools_folder)
 
     LOGGER.info("Download official MOT images")
-    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT16.zip"
-    if not os.path.exists(dst_val_tools_folder / "MOT16.zip"):
-        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT16.zip")
-    if not (dst_val_tools_folder / "data" / "MOT16").is_dir():
-        with zipfile.ZipFile(dst_val_tools_folder / "MOT16.zip", "r") as zip_ref:
-            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT16")
+    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT20.zip"
+    if not os.path.exists(dst_val_tools_folder / "MOT20.zip"):
+        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT20.zip")
+    if not (dst_val_tools_folder / "data" / "MOT20").is_dir():
+        with zipfile.ZipFile(dst_val_tools_folder / "MOT20.zip", "r") as zip_ref:
+            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT20")
 
     LOGGER.info("Download yolo weights")
     yolo_weight_url = (
@@ -97,7 +97,7 @@ def parse_opt():
         help="existing project/name ok, do not increment",
     )
     parser.add_argument(
-        "--benchmark", type=str, default="MOT16", help="MOT16, MOT17, MOT20"
+        "--benchmark", type=str, default="MOT20", help="MOT16, MOT17, MOT20"
     )
     parser.add_argument(
         "--split",
@@ -201,7 +201,7 @@ def main(opt):
             "python",
             dst_val_tools_folder / "scripts/run_mot_challenge.py",
             "--BENCHMARK",
-            "MOT16",
+            "MOT20",
             "--TRACKERS_TO_EVAL",
             opt.eval_existing if opt.eval_existing else MOT_results_folder.parent.name,
             "--SPLIT_TO_EVAL",
