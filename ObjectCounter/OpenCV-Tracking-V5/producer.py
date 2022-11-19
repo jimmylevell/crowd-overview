@@ -346,6 +346,8 @@ class ProducerThread(threading.Thread):
                             bboxes = output[0:4]
                             id = output[4]
                             cls = output[5]
+                            direction = output[7]
+                            measured_at = output[6]
 
                             if save_txt:
                                 # to MOT format
@@ -383,7 +385,7 @@ class ProducerThread(threading.Thread):
                                         else (
                                             f"{id} {conf:.2f}"
                                             if hide_class
-                                            else f"{id} {names[c]} {conf:.2f}"
+                                            else f"{id} {names[c]} {conf:.2f} {direction} "
                                         )
                                     )
                                 )

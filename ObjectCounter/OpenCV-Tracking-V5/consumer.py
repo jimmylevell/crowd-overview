@@ -40,12 +40,14 @@ class ConsumerThread(threading.Thread):
                 if self.objects_detected < (id + 1):
                     self.objects_detected += 1
 
+                    print(obj)
+
                     print("Info: Object {} detected.".format(id))
                     self.post_data(
                         id=id,
                         object_class=int(obj[5]),
-                        confidence_score=obj[7],
-                        direction="",
+                        confidence_score=obj[8],
+                        direction=obj[7],
                         measured_at=datetime.datetime.utcfromtimestamp(obj[6]),
                     )
 

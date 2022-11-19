@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useChannel, useEvent } from '@harelpls/use-pusher'
 import { CSVLink } from 'react-csv'
 
+import COCO_CLASSES from '../utils/coco-classes'
+
 export default function MeasurementsModal(props) {
   const [measurements, setMeasurements] = useState([])
   const [loading, setLoading] = useState(true)
@@ -59,8 +61,8 @@ export default function MeasurementsModal(props) {
                 ) : (
                   measurements.map((measurement) => (
                     <tr key={measurement._id}>
-                      <td>{measurement.object_class}</td>
-                      <td>{measurement.confidence_score}</td>
+                      <td>{COCO_CLASSES[measurement.object_class + 1]}</td>
+                      <td>{measurement.confidence_score.toFixed(2)}</td>
                       <td>{measurement.direction}</td>
                       <td>
                         {

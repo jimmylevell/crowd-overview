@@ -99,6 +99,8 @@ class Track:
         self.mean, self.covariance = self.kf.initiate(detection)
 
         self.measured_at = datetime.now().timestamp()
+        self.detections = []
+        self.direction = None
 
     def to_tlwh(self):
         """Get current position in bounding box format `(top left x, top left y,
@@ -316,6 +318,14 @@ class Track:
         self.time_since_update = 0
         if self.state == TrackState.Tentative and self.hits >= self._n_init:
             self.state = TrackState.Confirmed
+
+        self.detections.append(detection)
+        # compute direction of track
+        if len(self.detections) > 1:
+            detectionA = self.detections[-2].to_xyah()[0]
+            detectionB = self.detections[-1].to_xyah()[0]
+
+            self.direction = detectionB - detectionA
 
     def mark_missed(self):
         """Mark this track as missed (no association at the current time step)."""

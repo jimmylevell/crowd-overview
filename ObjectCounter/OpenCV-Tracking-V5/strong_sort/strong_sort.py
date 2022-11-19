@@ -95,8 +95,11 @@ class StrongSORT(object):
             class_id = track.class_id
             conf = track.conf
             measured_at = track.measured_at
+            direction = track.direction
             outputs.append(
-                np.array([x1, y1, x2, y2, track_id, class_id, measured_at, conf])
+                np.array(
+                    [x1, y1, x2, y2, track_id, class_id, measured_at, direction, conf]
+                )
             )
         if len(outputs) > 0:
             outputs = np.stack(outputs, axis=0)
