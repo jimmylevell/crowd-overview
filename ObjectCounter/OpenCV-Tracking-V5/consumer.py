@@ -63,8 +63,6 @@ class ConsumerThread(threading.Thread):
             ]
         }
 
-        print(data)
-
         try:
             response = requests.post(
                 settings.backend_url + "/" + settings.checkpoint_id,
