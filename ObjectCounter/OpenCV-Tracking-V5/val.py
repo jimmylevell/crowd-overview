@@ -56,15 +56,23 @@ def setup_evaluation(dst_val_tools_folder):
             zip_ref.extractall(dst_val_tools_folder / "data" / "MOT20")
 
     LOGGER.info("Download yolo weights")
-    yolo_weight_url = (
-        "https://download.app.levell.ch/crowdmanager/crowdhuman_yolov5m.pt"
-    )
-    if not os.path.exists(
-        dst_val_tools_folder / ".." / "weights" / "crowdhuman_yolov5m.pt"
-    ):
+    yolo_weight_url = "https://download.app.levell.ch/crowdmanager/yolov5m.pt"
+    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / "yolov5m.pt"):
         urllib.request.urlretrieve(
             yolo_weight_url,
-            dst_val_tools_folder / ".." / "weights" / "crowdhuman_yolov5m.pt",
+            dst_val_tools_folder / ".." / "weights" / "yolov5m.pt",
+        )
+
+    LOGGER.info("Download strong sort weights")
+    strong_sort_weight_url = (
+        "https://download.app.levell.ch/crowdmanager/osnet_x0_25_msmt17.pt"
+    )
+    if not os.path.exists(
+        dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt"
+    ):
+        urllib.request.urlretrieve(
+            strong_sort_weight_url,
+            dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt",
         )
 
 
@@ -74,13 +82,14 @@ def parse_opt():
         "--yolo-weights",
         nargs="+",
         type=str,
-        default=WEIGHTS / "crowdhuman_yolov5m.pt",
-        help="model.pt path(s)",
+        default=WEIGHTS / "yolov5m.pt",
+        help="yolov5n.pt, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt",
     )
     parser.add_argument(
         "--strong-sort-weights",
         type=str,
-        default=WEIGHTS / "mobilenetv2_x1_0_msmt17.pt",
+        default=WEIGHTS / "osnet_x0_25_msmt17",
+        help="osnet_x0_25_msmt17",
     )
     parser.add_argument(
         "--config-strongsort",
@@ -156,7 +165,7 @@ def main(opt):
                     "python",
                     "testrunner.py",
                     "--yolo-weights",
-                    "weights/crowdhuman_yolov5m.pt",
+                    "weights/yolov5m.pt",
                     "--strong-sort-weights",
                     "weights/osnet_x0_25_msmt17.pt",
                     "--imgsz",

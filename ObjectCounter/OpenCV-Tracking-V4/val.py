@@ -33,12 +33,13 @@ def setup_evaluation(dst_val_tools_folder):
             zip_ref.extractall(dst_val_tools_folder)
 
     print("Download official MOT images")
-    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT20.zip"
-    if not os.path.exists(dst_val_tools_folder / "MOT20.zip"):
-        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT20.zip")
-    if not (dst_val_tools_folder / "data" / "MOT20").is_dir():
-        with zipfile.ZipFile(dst_val_tools_folder / "MOT20.zip", "r") as zip_ref:
-            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT20")
+    # not working with MOT20 challenge, as the model runs out of memory
+    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT16.zip"
+    if not os.path.exists(dst_val_tools_folder / "MOT16.zip"):
+        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT16.zip")
+    if not (dst_val_tools_folder / "data" / "MOT16").is_dir():
+        with zipfile.ZipFile(dst_val_tools_folder / "MOT16.zip", "r") as zip_ref:
+            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT16")
 
 
 def main():
@@ -46,7 +47,7 @@ def main():
     setup_evaluation(dst_val_tools_folder)
 
     # set paths
-    mot_seqs_path = dst_val_tools_folder / "data" / "MOT20" / "train"
+    mot_seqs_path = dst_val_tools_folder / "data" / "MOT16" / "train"
     seq_paths = [p / "img1" for p in Path(mot_seqs_path).iterdir() if p.is_dir()]
 
     for i, seq_path in enumerate(seq_paths):
@@ -60,7 +61,7 @@ def main():
             "python",
             dst_val_tools_folder / "scripts/run_mot_challenge.py",
             "--BENCHMARK",
-            "MOT20",
+            "MOT16",
             "--TRACKERS_TO_EVAL",
             ROOT / "runs" / "tracks" / "exp7",
             "--SPLIT_TO_EVAL",
