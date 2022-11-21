@@ -36,3 +36,6 @@ dependencies:
       - imageio
       - GitPython
       - requests
+      - lap
+      - git+https://github.com/samson-wang/cython_bbox.git@9badb346a9222c98f828ba45c63fe3b7f2790ea2
+      - filterpy

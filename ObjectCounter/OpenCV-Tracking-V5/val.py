@@ -1,6 +1,7 @@
 import os
 import sys
 import torch
+import logging
 import subprocess
 from subprocess import Popen
 import argparse
@@ -9,6 +10,10 @@ from git import Repo
 import zipfile
 from pathlib import Path
 import shutil
+import threading
+import urllib.request
+import os
+
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # yolov5 strongsort root directory
@@ -23,47 +28,65 @@ if str(ROOT / "strong_sort") not in sys.path:
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 from yolov5.utils.general import LOGGER, check_requirements, print_args, increment_path
+from yolov5.utils.torch_utils import select_device
+from track import run
 
 
-def setup_evaluation(dst_val_tools_folder):
-    import urllib.request
-    import os
-
+def download_official_mot_eval_tool(dst_val_tools_folder):
     # source: https://github.com/JonathonLuiten/TrackEval#official-evaluation-code
-    LOGGER.info("Download official MOT evaluation repo")
     val_tools_url = "https://github.com/JonathonLuiten/TrackEval"
     try:
         Repo.clone_from(val_tools_url, dst_val_tools_folder)
+        LOGGER.info("Official MOT evaluation repo downloaded")
     except git.exc.GitError as err:
-        LOGGER.info("Eval repo already downloaded")
+        LOGGER.info("Evalulation repo already downloaded")
 
-    LOGGER.info(
-        "Get ground-truth txts, meta-data and example trackers for all currently supported benchmarks"
-    )
+
+def download_mot_dataset(dst_val_tools_folder, benchmark, yolo_model):
     gt_data_url = "https://download.app.levell.ch/crowdmanager/data.zip"
-    if not os.path.exists(dst_val_tools_folder / "data.zip"):
-        urllib.request.urlretrieve(gt_data_url, dst_val_tools_folder / "data.zip")
+    urllib.request.urlretrieve(
+        gt_data_url,
+        dst_val_tools_folder / "data.zip",
+    )
+
     if not (dst_val_tools_folder / "data").is_dir():
         with zipfile.ZipFile(dst_val_tools_folder / "data.zip", "r") as zip_ref:
             zip_ref.extractall(dst_val_tools_folder)
+        LOGGER.info("MOTs ground truth downloaded")
+    else:
+        LOGGER.info("Ground truth already downloaded")
 
-    LOGGER.info("Download official MOT images")
-    mot_gt_data_url = "https://download.app.levell.ch/crowdmanager/MOT20.zip"
-    if not os.path.exists(dst_val_tools_folder / "MOT20.zip"):
-        urllib.request.urlretrieve(mot_gt_data_url, dst_val_tools_folder / "MOT20.zip")
-    if not (dst_val_tools_folder / "data" / "MOT20").is_dir():
-        with zipfile.ZipFile(dst_val_tools_folder / "MOT20.zip", "r") as zip_ref:
-            zip_ref.extractall(dst_val_tools_folder / "data" / "MOT20")
+    mot_gt_data_url = (
+        "https://download.app.levell.ch/crowdmanager/" + benchmark + ".zip"
+    )
+    urllib.request.urlretrieve(
+        mot_gt_data_url,
+        dst_val_tools_folder / (benchmark + ".zip"),
+    )
 
-    LOGGER.info("Download yolo weights")
+    if not (dst_val_tools_folder / "data" / benchmark).is_dir():
+        with zipfile.ZipFile(
+            dst_val_tools_folder / (benchmark + ".zip"), "r"
+        ) as zip_ref:
+            if opt.benchmark == "MOT16":
+                zip_ref.extractall(dst_val_tools_folder / "data" / "MOT16")
+            else:
+                zip_ref.extractall(dst_val_tools_folder / "data")
+        LOGGER.info(f"{benchmark} images downloaded")
+    else:
+        LOGGER.info(f"{benchmark} data already downloaded")
+
     yolo_weight_url = "https://download.app.levell.ch/crowdmanager/yolov5m.pt"
-    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / "yolov5m.pt"):
+    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / yolo_model):
         urllib.request.urlretrieve(
             yolo_weight_url,
-            dst_val_tools_folder / ".." / "weights" / "yolov5m.pt",
+            dst_val_tools_folder / ".." / "weights" / yolo_model,
         )
+    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / yolo_model):
+        sys.exit("YOLO weights not found")
+    else:
+        LOGGER.info(f"{yolo_model} weights downloaded")
 
-    LOGGER.info("Download strong sort weights")
     strong_sort_weight_url = (
         "https://download.app.levell.ch/crowdmanager/osnet_x0_25_msmt17.pt"
     )
@@ -74,27 +97,30 @@ def setup_evaluation(dst_val_tools_folder):
             strong_sort_weight_url,
             dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt",
         )
+    if not os.path.exists(
+        dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt"
+    ):
+        sys.exit("StrongSort weights not found")
+    else:
+        LOGGER.info("StrongSort weights downloaded")
 
 
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--yolo-weights",
-        nargs="+",
         type=str,
         default=WEIGHTS / "yolov5m.pt",
         help="yolov5n.pt, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt",
     )
     parser.add_argument(
-        "--strong-sort-weights",
-        type=str,
-        default=WEIGHTS / "osnet_x0_25_msmt17",
-        help="osnet_x0_25_msmt17",
+        "--reid-weights", type=str, default=WEIGHTS / "osnet_x0_25_msmt17.pt"
     )
     parser.add_argument(
-        "--config-strongsort",
+        "--tracking-method",
         type=str,
-        default="track/strong_sort/configs/strong_sort.yaml",
+        default="strongsort",
+        help="strongsort, bytetrack, ocsort",
     )
     parser.add_argument("--name", default="exp", help="save results to project/name")
     parser.add_argument(
@@ -120,8 +146,33 @@ def parse_opt():
         default="",
         help="evaluate existing tracker results under mot_callenge/MOTXX-YY/...",
     )
+    parser.add_argument(
+        "--conf-thres", type=float, default=0.45, help="confidence threshold"
+    )
+    parser.add_argument(
+        "--imgsz",
+        "--img",
+        "--img-size",
+        nargs="+",
+        type=int,
+        default=[1280],
+        help="inference size h,w",
+    )
+    parser.add_argument(
+        "--device", default="", help="cuda device, i.e. 0 or 0,1,2,3 or cpu"
+    )
 
     opt = parser.parse_args()
+    device = []
+
+    for a in opt.device.split(","):
+        try:
+            a = int(a)
+        except ValueError:
+            pass
+        device.append(a)
+    opt.device = device
+
     print_args(vars(opt))
     return opt
 
@@ -129,11 +180,37 @@ def parse_opt():
 def main(opt):
     # download eval files
     dst_val_tools_folder = ROOT / "val_utils"
-    setup_evaluation(dst_val_tools_folder)
+    download_official_mot_eval_tool(dst_val_tools_folder)
+
+    if any(opt.benchmark is s for s in ["MOT16", "MOT17", "MOT20"]):
+        download_mot_dataset(dst_val_tools_folder, opt.benchmark, opt.yolo_weights)
 
     # set paths
     mot_seqs_path = dst_val_tools_folder / "data" / opt.benchmark / opt.split
-    seq_paths = [p / "img1" for p in Path(mot_seqs_path).iterdir() if p.is_dir()]
+
+    if opt.benchmark == "MOT17":
+        # each sequences is present 3 times, one for each detector
+        # (DPM, FRCNN, SDP). Keep only sequences from  one of them
+        seq_paths = sorted(
+            [str(p / "img1") for p in Path(mot_seqs_path).iterdir() if Path(p).is_dir()]
+        )
+        seq_paths = [Path(p) for p in seq_paths if "FRCNN" in p]
+        with open(
+            dst_val_tools_folder / "data/gt/mot_challenge/seqmaps/MOT17-train.txt", "r"
+        ) as f:  #
+            lines = f.readlines()
+        # overwrite MOT17 evaluation sequences to evaluate so that they are not duplicated
+        with open(
+            dst_val_tools_folder / "data/gt/mot_challenge/seqmaps/MOT17-train.txt", "w"
+        ) as f:
+            for line in seq_paths:
+                f.write(str(line.parent.stem) + "\n")
+    else:
+        # this is not the case for MOT16, MOT20 or your custom dataset
+        seq_paths = [
+            p / "img1" for p in Path(mot_seqs_path).iterdir() if Path(p).is_dir()
+        ]
+
     save_dir = increment_path(
         Path(opt.project) / opt.name, exist_ok=opt.exist_ok
     )  # increment run
@@ -148,28 +225,41 @@ def main(opt):
     )
     (MOT_results_folder).mkdir(parents=True, exist_ok=True)  # make
 
+    # extend devices to as many sequences are available
+    if any(isinstance(i, int) for i in opt.device) and len(opt.device) > 1:
+        devices = opt.device
+        for a in range(0, len(opt.device) % len(seq_paths)):
+            opt.device.extend(devices)
+        opt.device = opt.device[: len(seq_paths)]
+
     if not opt.eval_existing:
         processes = []
-        nr_gpus = torch.cuda.device_count()
-
         for i, seq_path in enumerate(seq_paths):
-            device = i % nr_gpus
+            # spawn one subprocess per GPU in increasing order.
+            # When max devices are reached start at 0 again
+            tracking_subprocess_device = (
+                opt.device[i] if len(opt.device) > 1 else opt.device[0]
+            )
 
             dst_seq_path = seq_path.parent / seq_path.parent.name
             if not dst_seq_path.is_dir():
                 src_seq_path = seq_path
                 shutil.move(str(src_seq_path), str(dst_seq_path))
 
-            subprocess.run(
+            p = subprocess.Popen(
                 [
                     "python",
-                    "testrunner.py",
+                    "track.py",
                     "--yolo-weights",
-                    "weights/yolov5m.pt",
-                    "--strong-sort-weights",
-                    "weights/osnet_x0_25_msmt17.pt",
+                    opt.yolo_weights,
+                    "--reid-weights",
+                    opt.reid_weights,
+                    "--tracking-method",
+                    opt.tracking_method,
+                    "--conf-thres",
+                    str(opt.conf_thres),
                     "--imgsz",
-                    str(1280),
+                    str(opt.imgsz[0]),
                     "--classes",
                     str(0),
                     "--name",
@@ -177,14 +267,17 @@ def main(opt):
                     "--project",
                     opt.project,
                     "--device",
-                    str(device),
+                    str(tracking_subprocess_device),
                     "--source",
                     dst_seq_path,
                     "--exist-ok",
                     "--save-txt",
-                    "--eval",
                 ]
             )
+            processes.append(p)
+
+        for p in processes:
+            p.wait()
 
     results = (
         save_dir.parent / opt.eval_existing / "tracks"
@@ -210,7 +303,7 @@ def main(opt):
             "python",
             dst_val_tools_folder / "scripts/run_mot_challenge.py",
             "--BENCHMARK",
-            "MOT20",
+            opt.benchmark,
             "--TRACKERS_TO_EVAL",
             opt.eval_existing if opt.eval_existing else MOT_results_folder.parent.name,
             "--SPLIT_TO_EVAL",
