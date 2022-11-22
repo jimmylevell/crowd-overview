@@ -84,10 +84,10 @@ def download_mot_dataset(dst_val_tools_folder, benchmark, yolo_model):
         LOGGER.info(f"{benchmark} data already downloaded")
 
     yolo_weight_url = "https://download.app.levell.ch/crowdmanager/" + yolo_model
-    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / yolo_model):
+    if not os.path.exists(dst_val_tools_folder / ".." / yolo_model):
         urllib.request.urlretrieve(
             yolo_weight_url,
-            dst_val_tools_folder / ".." / "weights" / yolo_model,
+            dst_val_tools_folder / ".." / yolo_model,
         )
     else:
         LOGGER.info(f"{yolo_model} already downloaded")
@@ -96,11 +96,11 @@ def download_mot_dataset(dst_val_tools_folder, benchmark, yolo_model):
         "https://download.app.levell.ch/crowdmanager/osnet_x0_25_msmt17.pt"
     )
     if not os.path.exists(
-        dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt"
+        dst_val_tools_folder / ".." / "osnet_x0_25_msmt17.pt"
     ):
         urllib.request.urlretrieve(
             strong_sort_weight_url,
-            dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt",
+            dst_val_tools_folder / ".." / "osnet_x0_25_msmt17.pt",
         )
     else:
         LOGGER.info(f"osnet_x0_25_msmt17.pt already downloaded")

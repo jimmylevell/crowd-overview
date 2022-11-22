@@ -1,0 +1,85 @@
+Speed: 1.7ms pre-process, 27.3ms inference, 3.5ms NMS, 5.4ms bytetrack update per image at shape (1, 3, 1280, 1280)
+Results saved to runs\track\exp95
+4 tracks saved to runs\track\exp95\tracks
+
+Eval Config:
+USE_PARALLEL         : True
+NUM_PARALLEL_CORES   : 4
+BREAK_ON_ERROR       : True
+RETURN_ON_ERROR      : False
+LOG_ON_ERROR         : C:\Daten\git\crowd-overview\ObjectCounter\OpenCV-Tracking-V5\val_utils\error_log.txt
+PRINT_RESULTS        : True
+PRINT_ONLY_COMBINED  : False
+PRINT_CONFIG         : True
+TIME_PROGRESS        : True
+DISPLAY_LESS_PROGRESS : False
+OUTPUT_SUMMARY       : True
+OUTPUT_EMPTY_CLASSES : True
+OUTPUT_DETAILED      : True
+PLOT_CURVES          : True
+
+MotChallenge2DBox Config:
+PRINT_CONFIG         : True
+GT_FOLDER            : C:\Daten\git\crowd-overview\ObjectCounter\OpenCV-Tracking-V5\val_utils\data/gt/mot_challenge/
+TRACKERS_FOLDER      : C:\Daten\git\crowd-overview\ObjectCounter\OpenCV-Tracking-V5\val_utils\data/trackers/mot_challenge/
+OUTPUT_FOLDER        : None
+TRACKERS_TO_EVAL     : ['exp95']
+CLASSES_TO_EVAL      : ['pedestrian']
+BENCHMARK            : MOT20
+SPLIT_TO_EVAL        : train
+INPUT_AS_ZIP         : False
+DO_PREPROC           : True
+TRACKER_SUB_FOLDER   : data
+OUTPUT_SUB_FOLDER    :
+TRACKER_DISPLAY_NAMES : None
+SEQMAP_FOLDER        : None
+SEQMAP_FILE          : None
+SEQ_INFO             : None
+GT_LOC_FORMAT        : {gt_folder}/{seq}/gt/gt.txt
+SKIP_SPLIT_FOL       : False
+
+CLEAR Config:
+METRICS              : ['HOTA', 'CLEAR', 'Identity']
+THRESHOLD            : 0.5
+PRINT_CONFIG         : True
+
+Identity Config:
+METRICS              : ['HOTA', 'CLEAR', 'Identity']
+THRESHOLD            : 0.5
+PRINT_CONFIG         : True
+
+Evaluating 1 tracker(s) on 4 sequence(s) for 1 class(es) on MotChallenge2DBox dataset using the following metrics: HOTA, CLEAR, Identity, Count
+
+
+Evaluating exp95
+
+
+All sequences for exp95 finished in 11.75 seconds
+
+HOTA: exp95-pedestrian             HOTA      DetA      AssA      DetRe     DetPr     AssRe     AssPr     LocA      RHOTA     HOTA(0)   LocA(0)   HOTALocA(0)
+MOT20-01                           32.498    21.899    48.312    22.371    76.193    51.096    73.95     79.674    32.866    42.19     75.425    31.822
+MOT20-02                           25.512    21.571    30.366    22.177    75.22     32.533    74.695    79.944    25.904    32.842    75.551    24.813
+MOT20-03                           21.478    17.464    26.559    17.841    67.278    27.759    69.946    73.612    21.731    31.878    66.574    21.222
+MOT20-05                           10.767    7.3461    15.868    7.3984    75.719    16.368    77.378    78.85     10.811    13.963    74.482    10.4
+COMBINED                           17.556    12.369    25.143    12.563    72.068    26.472    74.97     77.022    17.712    23.892    71.414    17.062
+
+CLEAR: exp95-pedestrian            MOTA      MOTP      MODA      CLR_Re    CLR_Pr    MTR       PTR       MLR       sMOTA     CLR_TP    CLR_FN    CLR_FP    IDSW      MT        PT        ML        Frag
+MOT20-01                           28.203    76.132    28.495    28.928    98.526    14.865    29.73     55.405    21.299    5748      14122     86        58        11        22        41        165
+MOT20-02                           27.004    76.595    27.197    28.34     96.123    8.5185    48.148    43.333    20.371    43854     110888    1769      298       23        130       117       955
+MOT20-03                           23.97     67.773    24.092    25.305    95.423    1.2821    41.311    57.407    15.815    79372     234286    3807      380       9         290       403       3170
+MOT20-05                           9.4863    75.044    9.5661    9.6685    98.952    0.25663   14.885    84.859    7.0734    62492     583852    662       516       3         174       992       2559
+COMBINED                           16.207    72.417    16.318    16.875    96.803    2.0767    27.81     70.113    11.553    191466    943148    6324      1252      46        616       1553      6849
+
+Identity: exp95-pedestrian         IDF1      IDR       IDP       IDTP      IDFN      IDFP
+MOT20-01                           38.967    25.204    85.842    5008      14862     826
+MOT20-02                           35.129    22.743    77.139    35193     119549    10430
+MOT20-03                           33.832    21.402    80.704    67129     246529    16050
+MOT20-05                           13.026    7.1494    73.17     46210     600134    16944
+COMBINED                           23.047    13.532    77.628    153540    981074    44250
+
+Count: exp95-pedestrian            Dets      GT_Dets   IDs       GT_IDs
+MOT20-01                           5834      19870     63        74
+MOT20-02                           45623     154742    378       270
+MOT20-03                           83179     313658    743       702
+MOT20-05                           63154     646344    901       1169
+COMBINED                           197790    1134614   2085      2215
