@@ -9,7 +9,11 @@ yolov3.tf*
 yolov3-tiny.weights
 yolov3-tiny.tf*
 osnet_x0_25_msmt17.pt
+yolov5n.pt
+yolov5s.pt
 yolov5m.pt
+yolov5l.pt
+yolov5x.pt
 crowdhuman_yolov5m.pt
 osnet_x1_0_dukemtmcreid.pt
 

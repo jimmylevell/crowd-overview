@@ -44,48 +44,53 @@ def download_official_mot_eval_tool(dst_val_tools_folder):
 
 def download_mot_dataset(dst_val_tools_folder, benchmark, yolo_model):
     gt_data_url = "https://download.app.levell.ch/crowdmanager/data.zip"
-    urllib.request.urlretrieve(
-        gt_data_url,
-        dst_val_tools_folder / "data.zip",
-    )
+    if not os.path.exists(dst_val_tools_folder / "data.zip"):
+        LOGGER.info("Downloading MOT dataset")
+        urllib.request.urlretrieve(
+            gt_data_url,
+            dst_val_tools_folder / "data.zip",
+        )
 
-    if not (dst_val_tools_folder / "data").is_dir():
-        with zipfile.ZipFile(dst_val_tools_folder / "data.zip", "r") as zip_ref:
-            zip_ref.extractall(dst_val_tools_folder)
-        LOGGER.info("MOTs ground truth downloaded")
+        if not (dst_val_tools_folder / "data").is_dir():
+            with zipfile.ZipFile(dst_val_tools_folder / "data.zip", "r") as zip_ref:
+                zip_ref.extractall(dst_val_tools_folder)
+            LOGGER.info("MOTs ground truth downloaded")
+        else:
+            LOGGER.info("Ground truth already unpackeddownloaded")
     else:
         LOGGER.info("Ground truth already downloaded")
 
     mot_gt_data_url = (
         "https://download.app.levell.ch/crowdmanager/" + benchmark + ".zip"
     )
-    urllib.request.urlretrieve(
-        mot_gt_data_url,
-        dst_val_tools_folder / (benchmark + ".zip"),
-    )
+    if not os.path.exists(dst_val_tools_folder / (benchmark + ".zip")):
+        urllib.request.urlretrieve(
+            mot_gt_data_url,
+            dst_val_tools_folder / (benchmark + ".zip"),
+        )
 
-    if not (dst_val_tools_folder / "data" / benchmark).is_dir():
-        with zipfile.ZipFile(
-            dst_val_tools_folder / (benchmark + ".zip"), "r"
-        ) as zip_ref:
-            if opt.benchmark == "MOT16":
-                zip_ref.extractall(dst_val_tools_folder / "data" / "MOT16")
-            else:
-                zip_ref.extractall(dst_val_tools_folder / "data")
-        LOGGER.info(f"{benchmark} images downloaded")
+        if not (dst_val_tools_folder / "data" / benchmark).is_dir():
+            with zipfile.ZipFile(
+                dst_val_tools_folder / (benchmark + ".zip"), "r"
+            ) as zip_ref:
+                if opt.benchmark == "MOT16":
+                    zip_ref.extractall(dst_val_tools_folder / "data" / "MOT16")
+                else:
+                    zip_ref.extractall(dst_val_tools_folder / "data")
+            LOGGER.info(f"{benchmark} images downloaded")
+        else:
+            LOGGER.info(f"{benchmark} data already unpacked")
     else:
         LOGGER.info(f"{benchmark} data already downloaded")
 
-    yolo_weight_url = "https://download.app.levell.ch/crowdmanager/yolov5m.pt"
+    yolo_weight_url = "https://download.app.levell.ch/crowdmanager/" + yolo_model
     if not os.path.exists(dst_val_tools_folder / ".." / "weights" / yolo_model):
         urllib.request.urlretrieve(
             yolo_weight_url,
             dst_val_tools_folder / ".." / "weights" / yolo_model,
         )
-    if not os.path.exists(dst_val_tools_folder / ".." / "weights" / yolo_model):
-        sys.exit("YOLO weights not found")
     else:
-        LOGGER.info(f"{yolo_model} weights downloaded")
+        LOGGER.info(f"{yolo_model} already downloaded")
 
     strong_sort_weight_url = (
         "https://download.app.levell.ch/crowdmanager/osnet_x0_25_msmt17.pt"
@@ -97,12 +102,8 @@ def download_mot_dataset(dst_val_tools_folder, benchmark, yolo_model):
             strong_sort_weight_url,
             dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt",
         )
-    if not os.path.exists(
-        dst_val_tools_folder / ".." / "weights" / "osnet_x0_25_msmt17.pt"
-    ):
-        sys.exit("StrongSort weights not found")
     else:
-        LOGGER.info("StrongSort weights downloaded")
+        LOGGER.info(f"osnet_x0_25_msmt17.pt already downloaded")
 
 
 def parse_opt():

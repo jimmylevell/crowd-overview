@@ -35,7 +35,18 @@ All configurations for the app can be made within the [settings.py](settings.py)
 ## Evaluation
 
 ```bash
-python eval.py
+# comparing the different tracking algorithms
+python val.py --tracking-method strongsort --yolo-weights yolov5n.pt
+python val.py --tracking-method bytetrack --yolo-weights yolov5n.pt
+python val.py --tracking-method ocsort --yolo-weights yolov5n.pt
+
+# comparing the different yolo weights
+python val.py --tracking-method strongsort --yolo-weights yolov5n.pt
+python val.py --tracking-method strongsort --yolo-weights yolov5s.pt
+python val.py --tracking-method strongsort --yolo-weights yolov5m.pt
+python val.py --tracking-method strongsort --yolo-weights yolov5l.pt
+python val.py --tracking-method strongsort --yolo-weights yolov5x.pt
+
 ```
 
 Speed: 1.5ms pre-process, 57.3ms inference, 2.4ms NMS, 469.3ms strong sort update per image at shape (1, 3, 1280, 1280)
@@ -134,3 +145,7 @@ COMBINED 514663 1134614 3267 2215
 [2] https://github.com/ultralytics/yolov5.git
 
 [3] https://github.com/KaiyangZhou/deep-person-reid
+
+```
+
+```
