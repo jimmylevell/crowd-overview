@@ -13,6 +13,8 @@ const Graph = dynamic(() => import('../components/graph'), {
 })
 
 export default function Home() {
+  const [currentTimeStep, setCurrentTimeStep] = useState(0)
+  const [stepSize, setStepSize] = useState(0.5)
   const [graph, setGraph] = useState(null)
   const [error, setError] = useState(null)
   const [message, setMessage] = useState(null)
@@ -34,6 +36,10 @@ export default function Home() {
       })
   }
 
+  const handleStepSizeChange = (event) => {
+    setCurrentTimeStep(event.target.value)
+  }
+
   return (
     <div className={styles.container}>
       <ToastNotification body={message} error={error} />
@@ -42,6 +48,13 @@ export default function Home() {
         <h1 className={styles.title}>Crowd Manager</h1>
 
         <Graph data={graph} />
+        <div>
+          <div className="alert alert-primary" role="alert">
+            <label for="currentTimeStep" className="form-label">Current Time Slot Selected: {currentTimeStep}</label>
+          </div>
+
+          <input type="range" className="form-range" min="0" max="5" step={stepSize} value={currentTimeStep} id="currentTimeStep" onChange={handleStepSizeChange} />
+        </div>
       </Layout>
     </div>
   )

@@ -1,8 +1,14 @@
 # vim: expandtab:ts=4:sw=4
+import sys
+import os
 import cv2
 import numpy as np
 from trackers.strong_sort.sort.kalman_filter import KalmanFilter
 from datetime import datetime
+
+settings_path = "../../settings.py"
+sys.path.append(os.path.abspath(settings_path))
+import settings
 
 
 class TrackState:
@@ -315,11 +321,16 @@ class Track:
 
         self.detections.append(detection)
         # compute direction of track
-        if len(self.detections) > 1 and self.is_confirmed():
-            detectionA = self.detections[-2].to_xyah()[0]
-            detectionB = self.detections[-1].to_xyah()[0]
+        if len(self.detections) > 2 and self.is_confirmed():
+            previous_detection = self.detections[-2].tlwh
+            current_detection = self.detections[-1].tlwh
 
-            self.direction = detectionB - detectionA
+            # compute direction
+
+            if settings.setup_direction == "x":
+                self.direction = current_detection[0] - previous_detection[0]
+            else:
+                self.direction = current_detection[1] - previous_detection[1]
 
     def mark_missed(self):
         """Mark this track as missed (no association at the current time step)."""

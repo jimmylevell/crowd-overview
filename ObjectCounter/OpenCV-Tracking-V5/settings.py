@@ -2,6 +2,9 @@ import threading
 
 
 def init():
+    global setup_direction
+    setup_direction = "x"  # x or y
+
     global queue
     queue = []
 
