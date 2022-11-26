@@ -26,6 +26,12 @@ def init():
     global checkpoint_id
     checkpoint_id = "6378e250b9439142c57e66b2"
 
+    global yolo_weights
+    yolo_weights = "yolov5m.pt"
+
+    global tracking_method
+    tracking_method = "strongsort"
+
     global imgsz
     imgsz = (640, 640)
 
