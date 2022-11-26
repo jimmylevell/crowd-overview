@@ -50,10 +50,21 @@ export default function Home() {
         <Graph data={graph} />
         <div>
           <div className="alert alert-primary" role="alert">
-            <label for="currentTimeStep" className="form-label">Current Time Slot Selected: {currentTimeStep}</label>
+            <label for="currentTimeStep" className="form-label">
+              Current Time Slot Selected: {currentTimeStep}
+            </label>
           </div>
 
-          <input type="range" className="form-range" min="0" max="5" step={stepSize} value={currentTimeStep} id="currentTimeStep" onChange={handleStepSizeChange} />
+          <input
+            type="range"
+            className="form-range"
+            min="0"
+            max="5"
+            step={stepSize}
+            value={currentTimeStep}
+            id="currentTimeStep"
+            onChange={handleStepSizeChange}
+          />
         </div>
       </Layout>
     </div>
