@@ -64,7 +64,11 @@ class ConsumerThread(threading.Thread):
         }
 
         try:
-            # response = requests.post(settings.backend_url + "/" + settings.checkpoint_id,json=data,headers=self.header,)
+            response = requests.post(
+                settings.backend_url + "/" + settings.checkpoint_id,
+                json=data,
+                headers=self.header,
+            )
 
             if response.status_code != 200:
                 print("Error: {}".format(response.text))

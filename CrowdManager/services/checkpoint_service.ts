@@ -1,6 +1,11 @@
-import { ICheckpoint } from '../model/Checkpoint'
 import { Node } from 'vis-network'
 import { getSettings } from './settings_service'
+import { ICheckpoint } from '../model/Checkpoint'
+import {
+  getAggregations,
+  getAggregationsByTimeSlot,
+} from './aggregation_service'
+import COCO_CLASSES from '../utils/coco-classes'
 
 export async function getCheckpoints() {
   return fetch('/api/checkpoint')
@@ -60,9 +65,17 @@ function createNewNode(name, i) {
   )
 }
 
-export async function getResultingGraph() {
+export async function getTimeSteps() {
+  const aggregations = (await getAggregations()).reverse()
+
+  // @ts-ignore
+  return [...new Set(aggregations.map((item) => item.createdAt))] // aggregated_at
+}
+
+export async function getResultingGraph(currentTimeStep: Date) {
   const checkpoints = await getCheckpoints()
   const settings = await getSettings()
+  const aggregations = await getAggregationsByTimeSlot(currentTimeStep)
 
   // add checkpoint to graph
   const nodes: Node[] = checkpoints.map((checkpoint) => {
@@ -84,8 +97,8 @@ export async function getResultingGraph() {
       edges.push({
         from: connection,
         to: checkpoint._id,
-        length: 100,
-        smooth: false,
+        value: 0,
+        label: '',
       })
     })
 
@@ -94,11 +107,74 @@ export async function getResultingGraph() {
       edges.push({
         from: checkpoint._id,
         to: connection,
-        length: 100,
-        smooth: false,
+        value: 0,
+        label: '',
       })
     })
   })
+
+  // add bidirectional edges between static points
+  edges.forEach((edge) => {
+    if (edge.from.includes('static')) {
+      edges.push({
+        from: edge.to,
+        to: edge.from,
+        value: 0,
+        label: '',
+      })
+    }
+  })
+
+  // add edges based on aggregations
+  aggregations.forEach((aggregation) => {
+    edges.forEach((edge) => {
+      // outbounding connects are associated with the static nodes
+      // inbound connections are associated with the other checkpoints
+
+      if (
+        aggregation.direction === 'in' &&
+        !edge.from.includes('static') &&
+        !edge.to.includes('static')
+      ) {
+        const number_of_outgoing_connections =
+          edges.filter((edge) => edge.from === aggregation.checkpoint_id)
+            .length - 1
+        const count_per_connection = Math.ceil(
+          aggregation.count / number_of_outgoing_connections
+        )
+
+        if (edge.from === aggregation.checkpoint_id) {
+          edge.value += edge.value + count_per_connection
+          edge.label =
+            edge.label +
+            ', ' +
+            'out: ' +
+            COCO_CLASSES[aggregation.object_class + 1] +
+            ' ' +
+            count_per_connection
+        }
+      }
+
+      if (
+        aggregation.direction === 'out' &&
+        (edge.from.includes('static') || edge.to.includes('static'))
+      ) {
+        // outbounding connections
+        if (aggregation.checkpoint_id === edge.from) {
+          edge.label =
+            edge.label +
+            ', ' +
+            'out: ' +
+            COCO_CLASSES[aggregation.object_class + 1] +
+            ' ' +
+            aggregation.count
+          edge.value = edge.value + aggregation.count
+        }
+      }
+    })
+  })
+
+  console.log(edges)
 
   const network = { nodes: nodes, edges: edges }
 

@@ -43,3 +43,6 @@ def init():
 
     global iou_thres
     iou_thres = 0.45
+
+    global detectable_classes
+    detectable_classes = ("1 2 3 4 6 8",)  # COCO classes which should be detected

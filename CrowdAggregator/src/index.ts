@@ -3,6 +3,8 @@ import Pusher from "pusher";
 import { getMeasurements, removeMeasurements } from "../model/Measurement";
 import { addAggregations } from "../model/Aggregation";
 
+const SLOT_SIZE = 600;
+
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
   key: process.env.PUSHER_APP_KEY,
@@ -27,36 +29,44 @@ const timerTrigger: AzureFunction = async function (
   context: Context,
   myTimer: any
 ): Promise<void> {
-  var timeStamp = new Date().toISOString();
-
   const measurements = await getMeasurements();
+  const AGGREGATION_TIME = measurements[0].measured_at;
 
-  const aggregations = measurements.reduce((p, c) => {
-    let checkpoint_id: any = c.checkpoint_id;
-    let object_class: any = c.object_class;
-    let direction: any = c.direction;
+  // create chunks based on slot size
+  for (
+    let chunkNumber = 0;
+    chunkNumber < measurements.length;
+    chunkNumber += SLOT_SIZE
+  ) {
+    const chunk = measurements.slice(chunkNumber, chunkNumber + SLOT_SIZE);
 
-    if (!p[checkpoint_id]) {
-      p[checkpoint_id] = {};
-    }
+    const aggregations = chunk.reduce((p, c) => {
+      let checkpoint_id: any = c.checkpoint_id;
+      let object_class: any = c.object_class;
+      let direction: any = parseFloat(c.direction) > 0 ? "in" : "out";
 
-    if (!p[checkpoint_id].hasOwnProperty(object_class)) {
-      p[checkpoint_id][object_class] = {};
-    }
+      if (!p[checkpoint_id]) {
+        p[checkpoint_id] = {};
+      }
 
-    if (!p[checkpoint_id][object_class].hasOwnProperty(direction)) {
-      p[checkpoint_id][object_class][direction] = 0;
-    }
+      if (!p[checkpoint_id].hasOwnProperty(object_class)) {
+        p[checkpoint_id][object_class] = {};
+      }
 
-    p[checkpoint_id][object_class][direction] =
-      p[checkpoint_id][object_class][direction] + 1;
+      if (!p[checkpoint_id][object_class].hasOwnProperty(direction)) {
+        p[checkpoint_id][object_class][direction] = 0;
+      }
 
-    return p;
-  }, {});
+      p[checkpoint_id][object_class][direction] =
+        p[checkpoint_id][object_class][direction] + 1;
 
-  await addAggregations(aggregations);
-  await removeMeasurements(measurements);
-  notifyAggregations(aggregations);
+      return p;
+    }, {});
+
+    await addAggregations(aggregations, AGGREGATION_TIME, chunkNumber);
+    //await removeMeasurements(measurements);
+    notifyAggregations(aggregations);
+  }
 };
 
 export default timerTrigger;

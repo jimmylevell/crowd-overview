@@ -1,0 +1,98 @@
+name: Publish docker images
+
+on:
+  # Trigger the workflow on push
+  # but only for the master branch
+  push:
+    branches:
+      - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_NAME: levaggregator
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./CrowdAggregator"
+
+jobs:
+  build-and-deploy-webap:
+    name: Push docker images to GitHub Packages
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io/jimmylevell/crowd-overview
+      IMAGE_NAME: crowdmanager
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        name: Extract metadata (tags, labels) for Docker
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable=true
+            type=ref,event=tag,enable=${{ github.event.ref_type == 'tag' }}
+          flavor: |
+            latest=false
+      - name: Build docker
+        id: build-docker
+        uses: docker/build-push-action@v3
+        with:
+          target: crowdmanager-deploy
+          context: ./CrowdManager
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Push docker
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          context: ./CrowdManager
+          target: crowdmanager-deploy
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Deploy to swarm
+        uses: wshihadeh/docker-deployment-action@v2
+        with:
+          remote_docker_host: worker@levell.ch
+          ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
+          deployment_mode: docker-swarm
+          copy_stack_file: true
+          pull_images_first: true
+          deploy_path: /home/worker/levell/crowdmanager
+          stack_file_name: docker-compose.prod.yml
+          args: --with-registry-auth --prune crowdmanager
+
+  build-and-deploy-azure-function:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout GitHub action"
+        uses: actions/checkout@v2
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v2
+      - name: "Resolve Project Dependencies Using Npm"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+          popd
+      - name: "Run Azure Functions action"
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}

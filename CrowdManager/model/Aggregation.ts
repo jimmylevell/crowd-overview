@@ -2,10 +2,10 @@ import mongoose, { Document, model, models, Model, Schema } from 'mongoose'
 import db from '../utils/db'
 
 export interface IAggregation {
-  _id: String
-  object_class: Number
-  checkpoint_id: String
-  direction: String
+  _id: string
+  object_class: number
+  checkpoint_id: string
+  direction: string
   aggregated_at: Date
 }
 
@@ -38,4 +38,10 @@ export async function getAggregationsByCheckpointId(checkpoint_id: string) {
   return Aggregation.find({ checkpoint_id: checkpoint_id }).sort({
     createdAt: -1,
   })
+}
+
+export async function getAggregationsByTimeSlot(timeSlot: Date) {
+  await db
+
+  return Aggregation.find({ createdAt: timeSlot }).sort({ createdAt: -1 })
 }

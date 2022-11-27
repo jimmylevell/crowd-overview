@@ -5,7 +5,7 @@ import styles from './index.module.css'
 import Layout from '../components/layout'
 import ToastNotification from '../components/toastnotification'
 
-import { getResultingGraph } from '../services/checkpoint_service'
+import { getResultingGraph, getTimeSteps } from '../services/checkpoint_service'
 
 // disable server side rendering for this import
 const Graph = dynamic(() => import('../components/graph'), {
@@ -13,18 +13,38 @@ const Graph = dynamic(() => import('../components/graph'), {
 })
 
 export default function Home() {
+  const [timeSteps, setTimeSteps] = useState([])
   const [currentTimeStep, setCurrentTimeStep] = useState(0)
-  const [stepSize, setStepSize] = useState(0.5)
   const [graph, setGraph] = useState(null)
   const [error, setError] = useState(null)
   const [message, setMessage] = useState(null)
 
+  const stepSize = 1
+
   useEffect(() => {
-    loadGraph()
+    loadTimeSteps()
   }, [])
 
-  const loadGraph = async () => {
-    getResultingGraph()
+  useEffect(() => {
+    loadGraph(currentTimeStep)
+  }, [currentTimeStep])
+
+  const loadTimeSteps = async () => {
+    getTimeSteps()
+      .then((timeSteps) => {
+        if (timeSteps.length > 0) {
+          setCurrentTimeStep(timeSteps[0])
+          setTimeSteps(timeSteps)
+        }
+      })
+      .catch((error) => {
+        setError(error)
+        setMessage('Could not load time steps')
+      })
+  }
+
+  const loadGraph = async (currentTimeStep) => {
+    getResultingGraph(currentTimeStep)
       .then((data) => {
         if (data) {
           setGraph(data)
@@ -37,7 +57,7 @@ export default function Home() {
   }
 
   const handleStepSizeChange = (event) => {
-    setCurrentTimeStep(event.target.value)
+    setCurrentTimeStep(timeSteps[event.target.value])
   }
 
   return (
@@ -59,9 +79,8 @@ export default function Home() {
             type="range"
             className="form-range"
             min="0"
-            max="5"
+            max={timeSteps.length - 1}
             step={stepSize}
-            value={currentTimeStep}
             id="currentTimeStep"
             onChange={handleStepSizeChange}
           />

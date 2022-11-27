@@ -2,10 +2,10 @@ import mongoose, { Document, model, models, Model, Schema } from 'mongoose'
 import db from '../utils/db'
 
 export interface ICheckpoint extends Document {
-  api_key: String
-  name: String
-  inbound_connections: Array<String>
-  outbound_connections: Array<String>
+  api_key: string
+  name: string
+  inbound_connections: Array<string>
+  outbound_connections: Array<string>
 }
 
 const CheckpointSchema: Schema = new Schema(

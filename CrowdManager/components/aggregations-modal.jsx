@@ -61,7 +61,11 @@ export default function AggregationsModal(props) {
                       <td>{aggregation.object_class}</td>
                       <td>{aggregation.direction}</td>
                       <td>
-                        {aggregation.createdAt?.replace('T', ' ').split('.')[0]}
+                        {
+                          aggregation.aggregated_at
+                            ?.replace('T', ' ')
+                            .split('.')[0]
+                        }
                       </td>
                     </tr>
                   ))

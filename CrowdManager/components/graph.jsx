@@ -8,21 +8,20 @@ export default function Graph(props) {
     nodes: {
       color: '#ffffff',
       fixed: false,
-      font: '12px arial black',
       scaling: {
         label: true,
       },
-      shadow: true,
       shape: 'circle',
       margin: 10,
     },
     edges: {
       arrows: 'to',
       color: 'black',
-      scaling: {
-        label: true,
-      },
       shadow: true,
+      scaling: {
+        min: 1,
+        max: 10,
+      },
     },
     interaction: {
       dragNodes: true,
@@ -34,6 +33,7 @@ export default function Graph(props) {
 
   useEffect(() => {
     const network = new Network(appRef.current, props?.data, options)
+    network.stabilize()
   }, [props.data])
 
   return <div className="graph" ref={appRef} />

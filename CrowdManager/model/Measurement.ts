@@ -2,11 +2,11 @@ import mongoose, { Document, model, models, Model, Schema } from 'mongoose'
 import db from '../utils/db'
 
 export interface IMeasurement extends Document {
-  _id: String
-  object_class: Number
-  checkpoint_id: String
-  confidence_score: Number
-  direction: String
+  _id: string
+  object_class: number
+  checkpoint_id: string
+  confidence_score: number
+  direction: string
   measured_at: Date
 }
 
