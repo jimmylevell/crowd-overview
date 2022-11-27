@@ -41,7 +41,7 @@ export default function MeasurementsModal(props) {
               data={measurements}
               filename={'measurement_' + checkpoint?.name + '.csv'}
             >
-              <i class="bi bi-filetype-csv"></i> Export Measurement
+              <i className="bi bi-filetype-csv"></i> Export Measurement
             </CSVLink>
 
             <table className="table table-hover">

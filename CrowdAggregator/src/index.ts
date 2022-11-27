@@ -3,7 +3,7 @@ import Pusher from "pusher";
 import { getMeasurements, removeMeasurements } from "../model/Measurement";
 import { addAggregations } from "../model/Aggregation";
 
-const SLOT_SIZE = 600;
+const SLOT_SIZE = 20;
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,

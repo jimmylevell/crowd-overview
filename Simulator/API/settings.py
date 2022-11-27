@@ -9,10 +9,10 @@ def init():
     number_of_cameras = 3
 
     global number_of_vehicles
-    number_of_vehicles = 50
+    number_of_vehicles = 80
 
     global number_of_walkers
-    number_of_walkers = 100
+    number_of_walkers = 140
 
     global percentage_pedestrians_running
     percentage_pedestrians_running = 0.3  # how many pedestrians will run

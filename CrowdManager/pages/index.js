@@ -70,7 +70,7 @@ export default function Home() {
         <Graph data={graph} />
         <div>
           <div className="alert alert-primary" role="alert">
-            <label for="currentTimeStep" className="form-label">
+            <label htmlFor="currentTimeStep" className="form-label">
               Current Time Slot Selected: {currentTimeStep}
             </label>
           </div>

@@ -39,7 +39,7 @@ export default function AggregationsModal(props) {
               data={aggregations}
               filename={'measurement_' + checkpoint?.name + '.csv'}
             >
-              <i class="bi bi-filetype-csv"></i> Export Aggregations
+              <i className="bi bi-filetype-csv"></i> Export Aggregations
             </CSVLink>
 
             <table className="table table-hover">

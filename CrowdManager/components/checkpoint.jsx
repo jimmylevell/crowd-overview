@@ -7,8 +7,8 @@ export default function Checkpoint({
   return (
     <div className="card mb-2">
       <div className="card-body">
-        <h6 class="card-subtitle mb-2 text-muted">{checkpoint._id}</h6>
-        <h6 class="card-subtitle mb-2 text-muted">
+        <h6 className="card-subtitle mb-2 text-muted">{checkpoint._id}</h6>
+        <h6 className="card-subtitle mb-2 text-muted">
           <i>
             Last updated:{' '}
             {checkpoint.updatedAt.toString()?.replace('T', ' ').split('.')[0]}
@@ -44,7 +44,7 @@ export default function Checkpoint({
           data-bs-toggle="modal"
           data-bs-target="#aggregationsmodal"
         >
-          <i class="bi bi-bar-chart-line"></i> View Aggregations
+          <i className="bi bi-bar-chart-line"></i> View Aggregations
         </button>
 
         <button type="button" className="btn btn-danger m-1" onClick={onDelete}>

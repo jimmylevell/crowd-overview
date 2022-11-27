@@ -10,6 +10,8 @@ settings_path = "../../settings.py"
 sys.path.append(os.path.abspath(settings_path))
 import settings
 
+settings.init()
+
 
 class TrackState:
     """

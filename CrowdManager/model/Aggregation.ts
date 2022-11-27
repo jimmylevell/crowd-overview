@@ -6,6 +6,7 @@ export interface IAggregation {
   object_class: number
   checkpoint_id: string
   direction: string
+  count: number
   aggregated_at: Date
 }
 
@@ -14,6 +15,7 @@ const AggregationSchema: Schema = new Schema(
     object_class: Number,
     checkpoint_id: String,
     direction: String,
+    count: Number,
     aggregated_at: Date,
   },
   {
