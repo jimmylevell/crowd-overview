@@ -9,7 +9,8 @@ from producer import ProducerThread
 def main():
     settings.init()
     ProducerThread(
-        source="..\\..\\Simulator\\API\\output\\24",  # "los_angeles.mp4"
+        source="..\\..\\Simulator\\API\\output\\demo\\251",  # "los_angeles.mp4"
+        # show_vid=True,
     ).start()
     ConsumerThread().start()
 

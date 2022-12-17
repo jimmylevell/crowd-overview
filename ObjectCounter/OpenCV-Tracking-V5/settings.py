@@ -21,13 +21,13 @@ def init():
     tiny_weight_urls = "https://download.app.levell.ch/crowdmanager/yolov3-tiny.weights"
 
     global auth_token
-    auth_token = "btoYflJ9nzrX2U43RSwDcsWUI"
+    auth_token = "2kw2DrVihxT6nGUgQgi11N"
 
     global backend_url
     backend_url = "http://localhost:3000/api/checkpoint/measurement/"
 
     global checkpoint_id
-    checkpoint_id = "6378e250b9439142c57e66b2"
+    checkpoint_id = "639dab08cd4390c69132ecbe"
 
     global yolo_weights
     yolo_weights = "yolov5m.pt"
