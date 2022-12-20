@@ -19,7 +19,7 @@
     "next-swagger-doc": "^0.3.6",
     "pino": "^8.7.0",
     "pusher": "^5.1.2",
-    "pusher-js": "^7.5.0",
+    "pusher-js": "^7.6.0",
     "react": "18.2.0",
     "react-bootstrap": "^2.6.0",
     "react-csv": "^2.2.2",
